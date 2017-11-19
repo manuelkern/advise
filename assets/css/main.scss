@@ -1,0 +1,18 @@
+@import 'normalize.css';
+
+@font-face {
+  font-family: 'MarkBook';
+  src: url('~assets/fonts/MarkBook.eot');
+  src: url('~assets/fonts/MarkBook.eot') format('embedded-opentype'),
+       url('~assets/fonts/MarkBook.woff2') format('woff2'),
+       url('~assets/fonts/MarkBook.woff') format('woff'),
+       url('~assets/fonts/MarkBook.ttf') format('truetype');
+}
+
+body {
+  font-family: 'MarkBook';
+}
+
+a {
+  text-decoration: none
+}
