@@ -2,8 +2,8 @@
   <div class="navigation" v-bind:class="{open: nav.isOpen}">
 
     <div class="toggle-nav">
-      <a v-on:click="toggleNav"class="trigger-open">{{ nav.trigger.close }}</a>
-      <a v-on:click="toggleNav"class="trigger-close">{{ nav.trigger.open }}</a>
+      <a v-on:click="toggleNav"class="trigger __open">{{ nav.trigger[locales.selected].close }}</a>
+      <a v-on:click="toggleNav"class="trigger __close">{{ nav.trigger[locales.selected].open }}</a>
     </div>
 
     <div class="links">
@@ -16,9 +16,9 @@
               name: 'locale-section',
               params: {
                 locale: locales.selected,
-                section: link.title_slug
+                section: link.section_title_slug
               }
-            }">{{ link.title }}</nuxt-link>
+            }">{{ link.section_title }}</nuxt-link>
         </li>
       </ul>
     </div>
@@ -28,12 +28,12 @@
         <li v-for="locale in locales.langs" :key="locale.id" class="locale-wrapper">
           <nuxt-link 
             class="locale"
-            @click.native="setLocale"
+            @click.native="setLocale(locale.lang)"
             :to="{
               to: 'locale',
               params: {
                 locale: locale.lang,
-                section: siteMap.links[locale.lang][siteMap.currentIndex].title_slug
+                section: siteMap.links[locale.lang][siteMap.currentIndex].section_title_slug
               }
             }">{{ locale.lang }}</nuxt-link>
         </li>
@@ -51,6 +51,11 @@ export default {
     'siteMap',
     'locales'
   ]),
+  data () {
+    return {
+      selectedLocale: ''
+    }
+  },
   methods: {
     ...mapActions({
       toggle: 'setNavTrigger',
@@ -60,29 +65,35 @@ export default {
     setCorrectActiveLinksOnPageLoad (locale, section) {
       this.setSelectedLocale(locale)
       this.siteMap.links[locale].map((link, index) => {
-        if (section === link.title_slug) {
+        if (section === link.section_title_slug) {
           this.setSectionIndex(index)
         }
       })
     },
-    setLocale () {
-      this.setSelectedLocale(this.$route.params.locale)
+    setLocale (lang) {
+      this.setSelectedLocale(lang)
     },
     animOpens ($el) {
       let $targets = {
+        triggers: $el.getElementsByClassName('trigger'),
         list: $el.getElementsByClassName('link-wrapper'),
         links: $el.getElementsByClassName('link')
       }
       let tlNavOpens = new TimelineMax()
-      tlNavOpens.staggerTo($targets.links, 0.4, {autoAlpha: 1}, 0.2, 'start')
+      tlNavOpens.to($el, 0.6, {width: '31.25vw'}, 'start')
+        .to($targets.triggers, 0.4, {y: 30}, 'start')
+        .staggerTo($targets.links, 0.4, {autoAlpha: 1}, 0.2, 'start')
         .staggerFrom($targets.list, 0.4, {x: 50, clearProps: 'all'}, 0.2, 'start')
     },
     animCloses ($el) {
       let $targets = {
+        triggers: $el.getElementsByClassName('trigger'),
         links: $el.getElementsByClassName('link')
       }
       let tlNavCloses = new TimelineMax()
-      tlNavCloses.staggerTo($targets.links, 0.4, {autoAlpha: 0, clearProps: 'all'}, 0.2)
+      tlNavCloses.to($el, 0.6, {width: '6.25vw'}, 'start')
+        .to($targets.triggers, 0.4, {y: 0}, 'start')
+        .staggerTo($targets.links, 0.4, {autoAlpha: 0, clearProps: 'all'}, 0.2, 'start')
     },
     toggleNav () {
       this.toggle()
@@ -132,66 +143,51 @@ a {
 
 .navigation {
   position: absolute;
-  width: 110px;
+  width: 6.25vw;
   height: 100%;
   background-color: #e4e4e4;
   overflow: hidden;
   padding-left: 0;
-  transition: width .6s ease-in-out, padding-left .6s ease-in-out;
   .toggle-nav {
     position: relative;
     height: 20px;
-    padding-left: 20px;
     top: 60px;
     overflow: hidden;
-    transition: padding-left .5s ease-in-out;
     a {
       position: absolute;
+      left: calc(3.125vw - 35px);
       cursor: pointer;
-      transition: top .6s ease-in-out, opacity .6s color .3s;
     }
-    .trigger-open {
-      opacity: 1;
+    .__open {
       top: 0;
     }
-    .trigger-close {
+    .__close {
       top: -30px;
-      opacity: 0;
     }
   }
   .links {
     position: relative;
     top: 160px;
+    left: calc(3.125vw - 35px);
     ul {
       li {
         .link {
           visibility: hidden;
           white-space: nowrap;
-          font-size: 28px;
+          font-size: 22px;
         }
       }
     }
   }
   .locales {
-    width: 110px;
     position: absolute;
     bottom: 60px;
-    left: 42px;
+    left: calc(3.125vw - 16.25px);
     transition: left .6s;
   }
   &.open {
-    width: 400px;
-    padding-left: 40px;
-    .toggle-nav {
-      padding-left: 0;
-      .trigger-open {
-        top: 30px;
-        opacity: 0;
-      }
-      .trigger-close {
-        opacity: 1;
-        top: 0px;
-      }
+    .locales {
+      left: calc(3.125vw - 35px);
     }
   }
 }
