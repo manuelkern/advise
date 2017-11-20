@@ -1,44 +1,50 @@
 <template>
-  <div class="navigation" v-bind:class="{open: nav.isOpen}">
+  <div class="nav-wrapper">
 
-    <div class="toggle-nav">
-      <a v-on:click="toggleNav"class="trigger __open">{{ nav.trigger[locales.selected].close }}</a>
-      <a v-on:click="toggleNav"class="trigger __close">{{ nav.trigger[locales.selected].open }}</a>
+    <span class="overlay"></span>
+
+    <div class="navigation" v-bind:class="{open: nav.isOpen}">
+
+      <div class="toggle-nav">
+        <a v-on:click="toggleNav"class="trigger __open">{{ nav.trigger[locales.selected].close }}</a>
+        <a v-on:click="toggleNav"class="trigger __close">{{ nav.trigger[locales.selected].open }}</a>
+      </div>
+
+      <div class="links">
+        <ul>
+          <li v-for="(link, index) in siteMap.links[locales.selected]" :key="link.id"  class="link-wrapper">
+            <nuxt-link
+              class="link"
+              @click.native="setNav(index)"
+              :to="{
+                name: 'locale-section',
+                params: {
+                  locale: locales.selected,
+                  section: link.section_title_slug
+                }
+              }">{{ link.section_title }}</nuxt-link>
+          </li>
+        </ul>
+      </div>
+
+      <div class="locales">
+        <ul>
+          <li v-for="locale in locales.langs" :key="locale.id" class="locale-wrapper">
+            <nuxt-link 
+              class="locale"
+              @click.native="setLocale(locale.lang)"
+              :to="{
+                to: 'locale',
+                params: {
+                  locale: locale.lang,
+                  section: siteMap.links[locale.lang][siteMap.currentIndex].section_title_slug
+                }
+              }">{{ locale.lang }}</nuxt-link>
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <div class="links">
-      <ul>
-        <li v-for="(link, index) in siteMap.links[locales.selected]" :key="link.id"  class="link-wrapper">
-          <nuxt-link
-            class="link"
-            @click.native="setNav(index)"
-            :to="{
-              name: 'locale-section',
-              params: {
-                locale: locales.selected,
-                section: link.section_title_slug
-              }
-            }">{{ link.section_title }}</nuxt-link>
-        </li>
-      </ul>
-    </div>
-
-    <div class="locales">
-      <ul>
-        <li v-for="locale in locales.langs" :key="locale.id" class="locale-wrapper">
-          <nuxt-link 
-            class="locale"
-            @click.native="setLocale(locale.lang)"
-            :to="{
-              to: 'locale',
-              params: {
-                locale: locale.lang,
-                section: siteMap.links[locale.lang][siteMap.currentIndex].section_title_slug
-              }
-            }">{{ locale.lang }}</nuxt-link>
-        </li>
-      </ul>
-    </div>
   </div>
 </template>
 
@@ -75,25 +81,31 @@ export default {
     },
     animOpens ($el) {
       let $targets = {
+        overlay: $el.getElementsByClassName('overlay'),
+        navigation: $el.getElementsByClassName('navigation'),
         triggers: $el.getElementsByClassName('trigger'),
         list: $el.getElementsByClassName('link-wrapper'),
         links: $el.getElementsByClassName('link')
       }
       let tlNavOpens = new TimelineMax()
-      tlNavOpens.to($el, 0.6, {width: '31.25vw'}, 'start')
+      tlNavOpens.to($targets.overlay, 0.8, {width: '68.75vw'}, 'start')
+        .to($targets.navigation, 0.6, {width: '31.25vw'}, 'start')
         .to($targets.triggers, 0.4, {y: 30}, 'start')
         .staggerTo($targets.links, 0.4, {autoAlpha: 1}, 0.2, 'start')
         .staggerFrom($targets.list, 0.4, {x: 50, clearProps: 'all'}, 0.2, 'start')
     },
     animCloses ($el) {
       let $targets = {
+        overlay: $el.getElementsByClassName('overlay'),
+        navigation: $el.getElementsByClassName('navigation'),
         triggers: $el.getElementsByClassName('trigger'),
         links: $el.getElementsByClassName('link')
       }
       let tlNavCloses = new TimelineMax()
-      tlNavCloses.to($el, 0.6, {width: '6.25vw'}, 'start')
-        .to($targets.triggers, 0.4, {y: 0}, 'start')
-        .staggerTo($targets.links, 0.4, {autoAlpha: 0, clearProps: 'all'}, 0.2, 'start')
+      tlNavCloses.to($targets.overlay, 0.4, {width: 0}, 'start')
+        .to($targets.navigation, 0.4, {width: '6.25vw'}, 'start')
+        .to($targets.triggers, 0.2, {y: 0}, 'start')
+        .staggerTo($targets.links, 0.2, {autoAlpha: 0, clearProps: 'all'}, 0.2, 'start')
     },
     toggleNav () {
       this.toggle()
@@ -141,11 +153,24 @@ a {
   }
 }
 
-.navigation {
+.overlay {
+  z-index: 800;
+  width: 0;
+  right: 31.25vw;
+  height: 100%;
+  background-color: #000000;
   position: absolute;
+  opacity: 0.8;
+
+}
+
+.navigation {
+  position: fixed;
+  z-index: 900;
+  left: 68.75vw;
   width: 6.25vw;
   height: 100%;
-  background-color: #e4e4e4;
+  background-color: #F7F7F7;
   overflow: hidden;
   padding-left: 0;
   .toggle-nav {

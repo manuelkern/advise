@@ -1,6 +1,11 @@
 import axios from 'axios'
 
 export const state = () => ({
+  layout: {
+    tablet: false,
+    ready: false,
+    width: 0
+  },
   nav: {
     isOpen: false,
     trigger: {
@@ -33,6 +38,9 @@ export const state = () => ({
 })
 
 export const mutations = {
+  setLayoutWidth (state, width) {
+    state.layout.width = width
+  },
   setSiteMapLinks (state, links) {
     state.siteMap.links = links
   },
@@ -64,6 +72,9 @@ export const actions = {
     })
     commit('setSiteMapLinks', links)
     commit('setHomePage', data.homepage)
+  },
+  setLayoutWidth ({commit}, width) {
+    commit('setLayoutWidth', width)
   },
   setNavTrigger ({commit}) {
     commit('setNavTrigger')
