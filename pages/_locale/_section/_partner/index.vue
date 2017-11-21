@@ -30,9 +30,10 @@
         <ul>
           <li v-for="(tile, index) in currentPartner.tile" :key="tile.id">
             <a v-bind:href="'#' + tile.value.title_slug"
-              v-on:click="setTileIndex(index)"
-              class="tile-title"
-              v-bind:class="{active: index === tileIndex}">
+              v-on:click="setLinkActive(tile.value.title_slug)"
+              v-bind:class="{active: linkActive === '#' + tile.value.title_slug}"
+              v-smooth-scroll="{duration: 1000}"
+              class="tile-title">
                 {{ tile.value.title }}
             </a>
           </li>
@@ -41,7 +42,7 @@
     </div>
 
     <div class="partner-content">
-      <div v-for="tile in currentPartner.tile" :key="tile.id" class="tiles" v-bind:id="tile.value.title_slug">
+      <div v-for="tile in currentPartner.tile" :key="tile.id" class="tiles" v-bind:id="tile.value.title_slug" v-bind:class="{active: linkActive === '#' + tile.value.title_slug}">
         <p class="content-tile-title">{{ tile.value.title }}</p>
         <div v-html="tile.value.body" class="content-tile-body"></div>
       </div>
@@ -140,7 +141,7 @@ export default {
   data () {
     return {
       baseUrl: process.env.cockpit.baseUrl,
-      tileIndex: 0
+      linkActive: ''
     }
   },
   methods: {
@@ -148,16 +149,14 @@ export default {
       setPanelOpen: 'setPanelOpen',
       resetPanel: 'resetPanel'
     }),
+    setLinkActive (slug) {
+      this.$data.linkActive = '#' + slug
+    },
     animateTileBody () {
       let tileBody = document.getElementsByClassName('tile-body')
       let animate = new TimelineMax()
       animate.to(tileBody, 0.3, {opacity: 0})
         .to(tileBody, 0.3, {opacity: 1})
-    },
-    setTileIndex (index) {
-      if (index !== this.$data.tileIndex) {
-        this.$data.tileIndex = index
-      }
     },
     togglePanel () {
       if (!this.layout.panelOpen) {
@@ -194,6 +193,11 @@ export default {
   },
   created () {
     this.resetPanel()
+    if (this.$route.hash) {
+      this.$data.linkActive = this.$route.hash
+    } else {
+      this.$data.linkActive = '#' + this.currentPartner.tile[0].value.title_slug
+    }
   },
   transition: {
     name: 'partner-transition',
@@ -221,9 +225,9 @@ export default {
       } else {
         let tlLeave = new TimelineMax({onComplete: done})
         tlLeave.to('.partner-image', 0.3, {opacity: 0, width: 0}, 0)
-          .to('.partner-content', 0.3, {x: 30, opacity: 0, clearProps: 'all'}, 0)
-          .staggerTo('.tile-title', 1, {opacity: 0, x: 30, clearProps: 'all'}, 0.2, 0)
-          .to('.__current', 1, {opacity: 0, y: -30, clearProps: 'all'}, 0)
+          .to('.partner-content', 0.3, {x: 30, opacity: 0}, 0)
+          .staggerTo('.tile-title', 1, {opacity: 0, x: 30}, 0.2, 0)
+          .to('.__current', 1, {opacity: 0, y: -30}, 0)
       }
       let tlLeave = new TimelineMax({onComplete: done})
       tlLeave.to('.partner-image', 0.5, {opacity: 0}, 0)
@@ -333,17 +337,18 @@ export default {
 
   .partner-content {
     margin-left: 31.25vw;
-    padding: 160px 40px 0 20px;
+    padding: 0 40px 0 20px;
     width: calc(37.5vw - 60px);
     max-width: 720px;
-    @include for-desktop-up {
-      padding: 200px 40px 0 20px;
-    }
-    @include for-big-desktop-up {
-      padding: 0 40px 0 20px;
-    }
     .tiles {
-      padding-top: 255px;
+      padding-top: 160px;
+      position: relative;
+      @include for-desktop-up {
+        padding-top: 200px;
+      }
+      @include for-big-desktop-up {
+        padding-top: 255px;
+      }
       &:first-of-type {
       }
       &:last-of-type {
@@ -353,22 +358,29 @@ export default {
         margin-top: 0;
         font-family: 'Marklight';
         font-size: 38px;
+        color: #808080;
       }
       .content-tile-body {
         font-size: 15px;
         line-height: 1.3;
         @include for-big-desktop-up {
-          font-size: 16px;
+          font-size: 18px;
         }
         h3 {
           color: #808080;
         }
         ul {
           li {
+            padding: 10px 0;
             margin-left: 14px;
             list-style: initial;
+            h3 {
+              margin: 0;
+            }
           }
         }
+      }
+      &.active {
       }
     }
   }

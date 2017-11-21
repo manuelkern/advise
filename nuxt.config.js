@@ -29,6 +29,7 @@ module.exports = {
   css: [
     { src: '~assets/css/main.scss', lang: 'scss' } // scss instead of sass
   ],
+  plugins: ['~/plugins/vue-smooth-scroll'],
   build: {
     vendor: ['axios','gsap'],
     /*

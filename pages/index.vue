@@ -1,14 +1,11 @@
 <template>
-  <div>
-    Hello
-  </div>
+
 </template>
 
 <script>
 export default {
+  fetch ({params, redirect}) {
+    redirect(301, '/en')
+  }
 }
 </script>
-
-<style>
-
-</style>
