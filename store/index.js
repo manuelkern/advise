@@ -4,7 +4,8 @@ export const state = () => ({
   layout: {
     tablet: false,
     ready: false,
-    width: 0
+    width: 0,
+    is: ''
   },
   nav: {
     isOpen: false,
@@ -34,12 +35,16 @@ export const state = () => ({
       fr: []
     }
   },
-  homePage: {}
+  homePage: {},
+  section: {}
 })
 
 export const mutations = {
   setLayoutWidth (state, width) {
     state.layout.width = width
+  },
+  setLayoutType (state, type) {
+    state.layout.is = type
   },
   setSiteMapLinks (state, links) {
     state.siteMap.links = links
@@ -55,6 +60,9 @@ export const mutations = {
   },
   setHomePage (state, homePage) {
     state.homePage = homePage
+  },
+  setSection (state, section) {
+    state.section = section
   }
 }
 
@@ -76,6 +84,9 @@ export const actions = {
   setLayoutWidth ({commit}, width) {
     commit('setLayoutWidth', width)
   },
+  setLayoutType ({commit}, type) {
+    commit('setLayoutType', type)
+  },
   setNavTrigger ({commit}) {
     commit('setNavTrigger')
   },
@@ -84,5 +95,8 @@ export const actions = {
   },
   setSectionIndex ({commit}, index) {
     commit('setSectionIndex', index)
+  },
+  setSection ({commit}, section) {
+    commit('setSection', section)
   }
 }

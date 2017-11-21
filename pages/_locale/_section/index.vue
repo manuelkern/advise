@@ -1,26 +1,57 @@
 <template>
-  <div class="section">
-
+  <div class="section-wrapper" v-if="isReady">
+    <div class="bg-wrapper">
+      <div class="bg" v-bind:style="{ backgroundImage: 'url(' + baseUrl + section.image.path + ')' }"></div>
+    </div>
+    <p class="title">{{ section.title }}</p>
     <!-- PARTNERS -->
-    <div v-if="siteMap.currentIndex === 0" class="partners">
-      {{ section.title }}
+    <div v-if="siteMap.currentIndex === 0" class="section partners">
+      <ul>
+        <li v-for="partner in section.partners" :key="partner.id">
+          <nuxt-link
+            class="partner-link"
+            :to="{
+              name: 'locale-section-partner',
+              params: {
+                locale: $route.params.locale,
+                section: section.title_slug,
+                partner: partner.name_slug
+              }
+            }">
+            {{ partner.name }}</nuxt-link>
+        </li>
+      </ul>
     </div>
 
     <!-- PRACTICE-AREAS -->
-    <div v-if="siteMap.currentIndex === 1" class="practice-areas">
-      {{ section.title }}
+    <div v-if="siteMap.currentIndex === 1" class="section practice-areas">
+    </div>
+
+    <!-- CONTACT -->
+    <div v-if="siteMap.currentIndex === 2" class="section practice-areas">
     </div>
     
   </div>
+  <div v-else>
+    <div>Loading...</div>
+  </div>
 </template>
+
 
 <script>
 import axios from 'axios'
 import { mapState } from 'vuex'
+import { TimelineMax } from 'gsap'
 export default {
   computed: mapState([
     'siteMap'
   ]),
+  data () {
+    return {
+      isReady: false,
+      baseUrl: process.env.cockpit.baseUrl
+    }
+  },
   async asyncData ({store, env, params}) {
     let id = null
     let localizedKeys = {}
@@ -37,7 +68,7 @@ export default {
     //
     // GET SECTION
     //
-    let { data } = await axios.get(`${env.cockpit.apiUrl}/collections/get/section?token=${env.cockpit.apiToken}&filter[_id]=${id}`)
+    let { data } = await axios.get(`${env.cockpit.apiUrl}/collections/get/section?token=${env.cockpit.apiToken}&filter[_id]=${id}&populate=1`)
     //
     // SET LOCALIZED KEYS
     //
@@ -47,8 +78,11 @@ export default {
       if (fields[key].localize) {
         if (params.locale === 'en') {
           localizedKeys[key] = (key)
+          localizedKeys.title_slug = 'title_slug'
         } else {
           localizedKeys[key] = (key + '_' + params.locale)
+          let titleSlug = 'title_' + params.locale + '_slug'
+          localizedKeys.title_slug = titleSlug
         }
       } else {
         notLocalizedKeys[key] = (key)
@@ -56,7 +90,9 @@ export default {
       }
     })
     let sectionKeysAndValues = Object.assign(localizedKeys, notLocalizedKeys)
-
+    //
+    // FUNCTION TO LOOP KEYS AND VALUES
+    //
     function forIn (obj, fn, thisObj) {
       for (let key in obj) {
         if (exec(fn, obj, key, thisObj) === false) {
@@ -75,20 +111,67 @@ export default {
       section[key] = data.entries[0][val]
     })
 
-    return { section: section }
+    return { section: section, isReady: true }
+  },
+  transition: {
+    name: 'section-transition',
+    appear: true,
+    css: false,
+    enter (el, done) {
+      let tlEnter = new TimelineMax({onComplete: done})
+      tlEnter.from('.bg', 3, {x: 60})
+        .from('.bg-wrapper', 0.6, {opacity: 0, width: 0}, 0)
+    },
+    leave (el, done) {
+      let tlLeave = new TimelineMax({onComplete: done})
+      tlLeave.to('.bg-wrapper', 0.5, {opacity: 0}, 0)
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
- .section {
-    position: absolute;
-    left: 200px; 
+ .section-wrapper {
+   padding: 63px 0 0 6.25vw;
+   width: 56.25vw;
+    .bg-wrapper {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 37.5vw;
+      overflow: hidden;
+      .bg {
+        width: calc(37.5vw + 60px);
+        position: absolute;
+        right: 0;
+        height: 100%;
+        background-size: cover;
+      }
+    }
+    .title {
+      font-family: 'Marklight';
+      color: #EE3524;
+      margin: 0 0 6px 0;
+      font-size: 38px;
+    }
+    .section {
+    }
     .partners {
-      background-color: red;
+      ul {
+        li {
+          padding: 6px 0;
+          .partner-link {
+            font-family: 'MarkLight';
+            color: #95989A;
+            margin: 0;
+            font-size: 38px;
+          }
+        }
+      }
     }
     .practice-areas {
-      background-color: green;
+
     }
  }
 </style>

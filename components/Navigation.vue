@@ -1,51 +1,57 @@
 <template>
-  <div class="nav-wrapper">
+  <transition name="nav-transition">
+    <div id="nav-wrapper">
 
-    <span class="overlay"></span>
+      <span class="overlay">
+        <img class="big-advise" src="~/assets/images/advise.svg">
+      </span>
 
-    <div class="navigation" v-bind:class="{open: nav.isOpen}">
+      <img class="logo" src="~/assets/images/logo.svg">
 
-      <div class="toggle-nav">
-        <a v-on:click="toggleNav"class="trigger __open">{{ nav.trigger[locales.selected].close }}</a>
-        <a v-on:click="toggleNav"class="trigger __close">{{ nav.trigger[locales.selected].open }}</a>
+      <div class="navigation" v-bind:class="{open: nav.isOpen}">
+
+        <div class="toggle-nav">
+          <a v-on:click="toggleNav"class="trigger __open">{{ nav.trigger[locales.selected].close }}</a>
+          <a v-on:click="toggleNav"class="trigger __close">{{ nav.trigger[locales.selected].open }}</a>
+        </div>
+
+        <div class="links">
+          <ul>
+            <li v-for="(link, index) in siteMap.links[locales.selected]" :key="link.id"  class="link-wrapper">
+              <nuxt-link
+                class="link"
+                @click.native="setNav(index)"
+                :to="{
+                  name: 'locale-section',
+                  params: {
+                    locale: locales.selected,
+                    section: link.section_title_slug
+                  }
+                }">{{ link.section_title }}</nuxt-link>
+            </li>
+          </ul>
+        </div>
+
+        <div class="locales">
+          <ul>
+            <li v-for="locale in locales.langs" :key="locale.id" class="locale-wrapper">
+              <nuxt-link 
+                class="locale"
+                @click.native="setLocale(locale.lang)"
+                :to="{
+                  to: 'locale',
+                  params: {
+                    locale: locale.lang,
+                    section: siteMap.links[locale.lang][siteMap.currentIndex].section_title_slug
+                  }
+                }">{{ locale.lang }}</nuxt-link>
+            </li>
+          </ul>
+        </div>
       </div>
 
-      <div class="links">
-        <ul>
-          <li v-for="(link, index) in siteMap.links[locales.selected]" :key="link.id"  class="link-wrapper">
-            <nuxt-link
-              class="link"
-              @click.native="setNav(index)"
-              :to="{
-                name: 'locale-section',
-                params: {
-                  locale: locales.selected,
-                  section: link.section_title_slug
-                }
-              }">{{ link.section_title }}</nuxt-link>
-          </li>
-        </ul>
-      </div>
-
-      <div class="locales">
-        <ul>
-          <li v-for="locale in locales.langs" :key="locale.id" class="locale-wrapper">
-            <nuxt-link 
-              class="locale"
-              @click.native="setLocale(locale.lang)"
-              :to="{
-                to: 'locale',
-                params: {
-                  locale: locale.lang,
-                  section: siteMap.links[locale.lang][siteMap.currentIndex].section_title_slug
-                }
-              }">{{ locale.lang }}</nuxt-link>
-          </li>
-        </ul>
-      </div>
     </div>
-
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -55,7 +61,8 @@ export default {
   computed: mapState([
     'nav',
     'siteMap',
-    'locales'
+    'locales',
+    'layout'
   ]),
   data () {
     return {
@@ -79,33 +86,38 @@ export default {
     setLocale (lang) {
       this.setSelectedLocale(lang)
     },
-    animOpens ($el) {
+    set$Targets ($el) {
       let $targets = {
+        logo: $el.getElementsByClassName('logo'),
         overlay: $el.getElementsByClassName('overlay'),
         navigation: $el.getElementsByClassName('navigation'),
         triggers: $el.getElementsByClassName('trigger'),
         list: $el.getElementsByClassName('link-wrapper'),
-        links: $el.getElementsByClassName('link')
+        sectionLink: $el.getElementsByClassName('link'),
+        advise: $el.getElementsByClassName('big-advise')
       }
+      return $targets
+    },
+    animOpens ($el) {
       let tlNavOpens = new TimelineMax()
-      tlNavOpens.to($targets.overlay, 0.8, {width: '68.75vw'}, 'start')
-        .to($targets.navigation, 0.6, {width: '31.25vw'}, 'start')
-        .to($targets.triggers, 0.4, {y: 30}, 'start')
-        .staggerTo($targets.links, 0.4, {autoAlpha: 1}, 0.2, 'start')
-        .staggerFrom($targets.list, 0.4, {x: 50, clearProps: 'all'}, 0.2, 'start')
+      let $t = this.set$Targets($el)
+      tlNavOpens.to($t.overlay, 0.8, {width: '68.75vw'}, 'start')
+        .to($t.navigation, 0.6, {width: '31.25vw', paddingLeft: '20px'}, 'start')
+        .to($t.triggers, 0.4, {y: 30}, 'start')
+        .staggerTo($t.sectionLink, 0.4, {autoAlpha: 1}, 0.2, 'start')
+        .staggerFrom($t.list, 0.4, {x: 50, clearProps: 'all'}, 0.2, 'start')
+        .to($t.logo, 0.4, {x: 60}, 0.1)
+        .to($t.advise, 0.8, {opacity: 0.5}, 0.6)
     },
     animCloses ($el) {
-      let $targets = {
-        overlay: $el.getElementsByClassName('overlay'),
-        navigation: $el.getElementsByClassName('navigation'),
-        triggers: $el.getElementsByClassName('trigger'),
-        links: $el.getElementsByClassName('link')
-      }
+      let $t = this.set$Targets($el)
       let tlNavCloses = new TimelineMax()
-      tlNavCloses.to($targets.overlay, 0.4, {width: 0}, 'start')
-        .to($targets.navigation, 0.4, {width: '6.25vw'}, 'start')
-        .to($targets.triggers, 0.2, {y: 0}, 'start')
-        .staggerTo($targets.links, 0.2, {autoAlpha: 0, clearProps: 'all'}, 0.2, 'start')
+      tlNavCloses.to($t.overlay, 0.4, {width: 0}, 'start')
+        .to($t.logo, 0.4, {x: 0}, 0.1)
+        .to($t.navigation, 0.4, {width: '6.25vw', paddingLeft: '0', clearProps: 'padding-left'}, 'start')
+        .to($t.triggers, 0.6, {y: 0}, 'start')
+        .staggerTo($t.sectionLink, 0.2, {autoAlpha: 0, clearProps: 'all'}, 0.2, 'start')
+        .to($t.advise, 0.4, {opacity: 0}, 'start')
     },
     toggleNav () {
       this.toggle()
@@ -124,6 +136,13 @@ export default {
     let locale = this.$route.params.locale
     let section = this.$route.params.section
     this.setCorrectActiveLinksOnPageLoad(locale, section)
+  },
+  mounted () {
+    let $el = document.getElementById('nav-wrapper')
+    let tlNavAppears = new TimelineMax()
+    let $t = this.set$Targets($el)
+    tlNavAppears.from($t.navigation, 1, {width: 0, clearProps: 'width'})
+      .from($t.logo, 0.8, {x: 60}, 0)
   }
 }
 </script>
@@ -131,20 +150,18 @@ export default {
 
 <style lang="scss" scoped>
 
-ul {
-  margin: 0;
-  padding: 0;
-  li {
-    list-style: none;
-    padding: 6px 0;
-  }
-}
+@import '~assets/css/vars.scss';
 
 a {
   color: #ACACAC;
   text-transform: uppercase;
-  letter-spacing: 5px;
+  letter-spacing: 4px;
   transition: color .3s;
+  font-size: 14px;
+  @include for-desktop-up {
+    font-size: 16px;    
+    letter-spacing: 5px;
+  }
   &:hover {
     color: #676767;
   }
@@ -159,9 +176,21 @@ a {
   right: 31.25vw;
   height: 100%;
   background-color: #000000;
-  position: absolute;
+  position: fixed;
   opacity: 0.8;
+  overflow: hidden;
+  img {
+    opacity: 0;
+    height: 100%;
+  }
+}
 
+.logo {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  height: 360px;
+  z-index: 950;
 }
 
 .navigation {
@@ -176,12 +205,15 @@ a {
   .toggle-nav {
     position: relative;
     height: 20px;
-    top: 60px;
+    top: 67px;
     overflow: hidden;
     a {
       position: absolute;
-      left: calc(3.125vw - 35px);
       cursor: pointer;
+      left: calc(3.125vw - 28px);
+      @include for-desktop-up {
+        left: calc(3.125vw - 33px);
+      }
     }
     .__open {
       top: 0;
@@ -192,10 +224,14 @@ a {
   }
   .links {
     position: relative;
-    top: 160px;
-    left: calc(3.125vw - 35px);
+    top: 200px;
+    left: calc(3.125vw - 28px);
+    @include for-desktop-up {
+      left: calc(3.125vw - 33px);
+    }
     ul {
       li {
+        padding: 6px 0;
         .link {
           visibility: hidden;
           white-space: nowrap;
@@ -207,12 +243,23 @@ a {
   .locales {
     position: absolute;
     bottom: 60px;
-    left: calc(3.125vw - 16.25px);
+    left: calc(3.125vw - 13px);
     transition: left .6s;
+    @include for-desktop-up {
+      left: calc(3.125vw - 16.25px);
+    }
+    ul {
+      li {
+        padding: 6px 0;
+      }
+    }
   }
   &.open {
     .locales {
-      left: calc(3.125vw - 35px);
+      left: calc(3.125vw - 8px);
+      @include for-desktop-up {
+        left: calc(3.125vw - 14px);
+      }
     }
   }
 }

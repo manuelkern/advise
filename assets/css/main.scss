@@ -9,10 +9,50 @@
        url('~assets/fonts/MarkBook.ttf') format('truetype');
 }
 
+@font-face {
+  font-family: 'MarkLight';
+  src: url('~assets/fonts/MarkLight.eot');
+  src: url('~assets/fonts/MarkLight.eot') format('embedded-opentype'),
+       url('~assets/fonts/MarkLight.woff2') format('woff2'),
+       url('~assets/fonts/MarkLight.woff') format('woff'),
+       url('~assets/fonts/MarkLight.ttf') format('truetype'),
+       url('~assets/fonts/MarkLight.svg#MarkExtralight') format('svg');
+}
+
 body {
   font-family: 'MarkBook';
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+  li {
+    list-style: none;
+  }
+}
+
 a {
   text-decoration: none
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+li,
+p,
+a {
+  color: #ACACAC;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: unset;
 }

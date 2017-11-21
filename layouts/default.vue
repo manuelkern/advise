@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app">
     <navigation></navigation>
     <nuxt/>
   </div>
@@ -7,6 +7,7 @@
 
 <script>
 import Navigation from '~/components/Navigation'
+import debounce from 'lodash/debounce'
 import { mapState, mapActions } from 'vuex'
 export default {
   components: {
@@ -17,16 +18,31 @@ export default {
   ]),
   methods: {
     ...mapActions({
-      setLayoutWidth: 'setLayoutWidth'
+      setLayoutWidth: 'setLayoutWidth',
+      setLayoutype: 'setLayoutType'
     }),
-    setLayout () {
+    setWidth () {
       let width = window.innerWidth
       this.setLayoutWidth(width)
+      let type = ''
+      if (width < 1200) {
+        type = 'tablet'
+      } else if (width < 1366) {
+        type = 'small-desktop'
+      } else if (width < 1800) {
+        type = 'desktop'
+      } else {
+        type = 'big-desktop'
+      }
+      this.setLayoutype(type)
+    },
+    setLayout () {
+      this.setWidth()
     }
   },
   mounted () {
     this.setLayout()
-    window.addEventListener('resize', this.setLayout)
+    window.addEventListener('resize', debounce(this.setLayout, 200))
   }
 }
 </script>
