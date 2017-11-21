@@ -1,18 +1,12 @@
 <template>
   <div class="partners-wrapper">
-    <nuxt-link class="back"
-        :to="{
-        name: 'locale-section',
-        params: {
-          locale: $route.params.locale,
-          section: $route.params.section
-        }
-    }"><img src="~/assets/images/arrow.svg"></nuxt-link>
+
     <div class="partner-controls">
+
+      <div class="show-partners" v-on:click="togglePanel"><img src="~/assets/images/arrow.svg" class="arrow"></div>
 
       <p class="__current partner-name">
         {{ currentPartner.name }}
-        <span class="show-partners" v-on:click="togglePanel"><img src="~/assets/images/arrow.svg" class="arrow"></span>
       </p>
 
       <div class="not-current">
@@ -59,7 +53,7 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { TimelineMax } from 'gsap'
 import axios from 'axios'
 import Tile from '~/components/Tile'
@@ -68,7 +62,8 @@ export default {
     'tile': Tile
   },
   computed: mapState([
-    'siteMap'
+    'siteMap',
+    'layout'
   ]),
   async asyncData ({store, env, params}) {
     let localizedKeys = {}
@@ -143,11 +138,14 @@ export default {
   data () {
     return {
       baseUrl: process.env.cockpit.baseUrl,
-      tileIndex: 0,
-      panelOpen: false
+      tileIndex: 0
     }
   },
   methods: {
+    ...mapActions({
+      setPanelOpen: 'setPanelOpen',
+      resetPanel: 'resetPanel'
+    }),
     animateTileBody () {
       let tileBody = document.getElementsByClassName('tile-body')
       let animate = new TimelineMax()
@@ -164,12 +162,12 @@ export default {
       }
     },
     togglePanel () {
-      if (!this.$data.panelOpen) {
+      if (!this.layout.panelOpen) {
         this.panelOpens()
       } else {
         this.panelCloses()
       }
-      this.$data.panelOpen = !this.$data.panelOpen
+      this.setPanelOpen()
     },
     targetPanel$el () {
       let $t = {
@@ -195,6 +193,43 @@ export default {
         .to($t.overlay, 0.5, {y: '-100%', clearProps: 'all'}, 0.2)
         .to($t.arrow, 0.3, {rotation: -90}, 0)
     }
+  },
+  created () {
+    this.resetPanel()
+  },
+  transition: {
+    name: 'partner-transition',
+    appear: true,
+    css: false,
+    enter (el, done) {
+      let tlEnter = new TimelineMax({onComplete: done})
+      tlEnter.from('.image', 3, {x: 60})
+        .from('.partner-image', 0.6, {opacity: 0, width: 0}, 0)
+        .from('.partner-content', 0.6, {x: -30, opacity: 0, clearProps: 'all'}, 0.3)
+        .staggerFrom('.tile-title', 1, {opacity: 0, x: 30, clearProps: 'all'}, 0.2, 0.3)
+        .from('.__current', 1, {opacity: 0, y: -30, clearProps: 'all'}, 0)
+    },
+    leave (el, done) {
+      if (this.$store.state.layout.panelOpen) {
+        let tlLeave = new TimelineMax({onComplete: done})
+        tlLeave.staggerTo('.__not-current', 0.4, {autoAlpha: 0}, 0.2, 0)
+          .to('.not-current-overlay', 0.5, {autoAlpha: 0}, 0.2)
+          .to('.not-current-overlay', 0.5, {y: '-100%'}, 0.2)
+          .to('.arrow', 0.3, {rotation: -90}, 0)
+          .to('.partner-content', 0.3, {x: 30, opacity: 0}, 0)
+          .to('.partner-image', 0.3, {opacity: 0, width: 0}, 0)
+          .staggerTo('.tile-title', 1, {opacity: 0, x: 30}, 0.2, 0)
+          .to('.__current', 1, {opacity: 0, y: -30}, 0)
+      } else {
+        let tlLeave = new TimelineMax({onComplete: done})
+        tlLeave.to('.partner-image', 0.3, {opacity: 0, width: 0}, 0)
+          .to('.partner-content', 0.3, {x: 30, opacity: 0, clearProps: 'all'}, 0)
+          .staggerTo('.tile-title', 1, {opacity: 0, x: 30, clearProps: 'all'}, 0.2, 0)
+          .to('.__current', 1, {opacity: 0, y: -30, clearProps: 'all'}, 0)
+      }
+      let tlLeave = new TimelineMax({onComplete: done})
+      tlLeave.to('.partner-image', 0.5, {opacity: 0}, 0)
+    }
   }
 }
 </script>
@@ -202,30 +237,7 @@ export default {
 <style lang="scss">
 @import '~assets/css/vars.scss';
 .partners-wrapper {
-  .back {
-    position: fixed;
-    left: 0;
-    z-index: 200;
-    width: 6.25vw;
-    height: 18px;
-    top: 70px;
-    text-align: center;
-    opacity: 0.5;
-    transition: opacity .3s, left .3s;
-    &:hover {
-      cursor: pointer;
-      opacity: 1;
-      left: -8px;
-    }
-    @include for-big-desktop-up {
-      height: 24px;
-      top: 73px;
-    }
-    img {
-      position: relative;
-      height: 100%;
-    }
-  }
+
 
   .partner-controls {
     position: fixed;
@@ -234,9 +246,6 @@ export default {
     left: 6.25vw;
     top: 0;
     width: 25vw;
-    @include for-desktop-up {
-      padding-top: 63px;
-    }
     .partner-name {
       font-family: 'Marklight';
       font-size: 24px;
@@ -250,35 +259,28 @@ export default {
       }
     }
 
-    .__current {
-      white-space: nowrap;
-      span {
-        position: relative;
-        z-index: 920;
-        top: 0px;
-        left: calc(3.125vw - 10px);
-        height: 20px;
-        width: 20px;
-        display: inline-block;
-        opacity: 0.5;
-        transition: opacity .3s;
-        &:hover {
-          cursor: pointer;
-          opacity: 1;
-        }
-        @include for-big-desktop-up {
-          top: 0px;
-          height: 30px;
-          width: 60px;
-        }
-        img {
-          border-style: none;
-          height: 90%;
-          position: absolute;
-          transform: rotate(-90deg);
-          top: 5px;
-          left: 5px;
-        }
+    .show-partners {
+      width: 6.25vw;
+      position: fixed;
+      z-index: 650;
+      left: 0;
+      height: 20px;
+      top: 70px;
+      text-align: center;
+      opacity: 0.5;
+      transition: opacity .3s;
+      &:hover {
+        opacity: 1;
+        cursor: pointer;
+      }
+      img {
+        position: absolute;
+        transform: rotate(-90deg);
+        height: 100%;
+      }
+      @include for-big-desktop-up {
+        height: 30px;
+        top: 72px;
       }
     }
 
@@ -362,15 +364,18 @@ export default {
   }
 
   .partner-image {
-    width: 25vw;
     position: fixed;
+    overflow: hidden;
+    width: 25vw;
     height: 100vh;
     right: 0;
     top: 0;
     .image {
-      width: 25vw;
-      height: 100%;
+      position: absolute;
       background-size: cover;
+      right: 0;
+      width: calc(25vw + 60px);
+      height: 100%;
     }
   }
 }

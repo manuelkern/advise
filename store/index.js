@@ -5,7 +5,8 @@ export const state = () => ({
     tablet: false,
     ready: false,
     width: 0,
-    is: ''
+    is: '',
+    panelOpen: false
   },
   nav: {
     isOpen: false,
@@ -63,6 +64,12 @@ export const mutations = {
   },
   setSection (state, section) {
     state.section = section
+  },
+  setPanelOpen (state) {
+    state.layout.panelOpen = !state.layout.panelOpen
+  },
+  resetPanel (state) {
+    state.layout.panelOpen = false
   }
 }
 
@@ -98,5 +105,11 @@ export const actions = {
   },
   setSection ({commit}, section) {
     commit('setSection', section)
+  },
+  setPanelOpen ({commit}) {
+    commit('setPanelOpen')
+  },
+  resetPanel ({commit}) {
+    commit('resetPanel')
   }
 }

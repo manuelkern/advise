@@ -121,10 +121,14 @@ export default {
       let tlEnter = new TimelineMax({onComplete: done})
       tlEnter.from('.bg', 3, {x: 60})
         .from('.bg-wrapper', 0.6, {opacity: 0, width: 0}, 0)
+        .from('.title', 1, {y: -20, opacity: 0}, 0)
+        .staggerFrom('.partner-link', 0.6, {opacity: 0}, 0.2, 0.2)
     },
     leave (el, done) {
       let tlLeave = new TimelineMax({onComplete: done})
       tlLeave.to('.bg-wrapper', 0.5, {opacity: 0}, 0)
+        .staggerTo('.partner-link', 0.6, {opacity: 0}, 0.1, 0)
+        .to('.title', 0.4, {y: -20, opacity: 0}, 0)
     }
   }
 }
