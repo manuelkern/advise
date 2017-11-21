@@ -26,14 +26,16 @@
         <span class="not-current-overlay"></span>
       </div>
 
-      <div class="tiles-titles">
+      <!-- LINKS TO TILE -->
+
+      <div class="tiles-anchors">
         <ul>
           <li v-for="(tile, index) in currentPartner.tile" :key="tile.id">
             <a v-bind:href="'#' + tile.value.title_slug"
               v-on:click="setLinkActive(tile.value.title_slug)"
               v-bind:class="{active: linkActive === '#' + tile.value.title_slug}"
               v-smooth-scroll="{duration: 1000}"
-              class="tile-title">
+              class="tile-anchor">
                 {{ tile.value.title }}
             </a>
           </li>
@@ -41,12 +43,21 @@
       </div>
     </div>
 
+    <!-- MAIN CONTENT -->
+
     <div class="partner-content">
-      <div v-for="tile in currentPartner.tile" :key="tile.id" class="tiles" v-bind:id="tile.value.title_slug" v-bind:class="{active: linkActive === '#' + tile.value.title_slug}">
-        <p class="content-tile-title">{{ tile.value.title }}</p>
-        <div v-html="tile.value.body" class="content-tile-body"></div>
+      <div
+        v-for="tile in currentPartner.tile"
+        :key="tile.id"
+        class="tile"
+        v-bind:id="tile.value.title_slug"
+        v-bind:class="{active: linkActive === '#' + tile.value.title_slug}">
+        <p class="tile-title">{{ tile.value.title }}</p>
+        <div v-html="tile.value.body" class="tile-body"></div>
       </div>
     </div>
+
+    <!-- IMAGE -->
 
     <div class="partner-image">
       <div class="image" v-bind:style="{ backgroundImage: 'url(' + baseUrl + currentPartner.image.path + ')' }"></div>
@@ -199,6 +210,8 @@ export default {
       this.$data.linkActive = '#' + this.currentPartner.tile[0].value.title_slug
     }
   },
+  mounted () {
+  },
   transition: {
     name: 'partner-transition',
     appear: true,
@@ -208,7 +221,7 @@ export default {
       tlEnter.from('.image', 3, {x: 60})
         .from('.partner-image', 0.6, {opacity: 0, width: 0}, 0)
         .from('.partner-content', 0.6, {x: -30, opacity: 0, clearProps: 'all'}, 0.3)
-        .staggerFrom('.tile-title', 1, {opacity: 0, x: 30, clearProps: 'all'}, 0.2, 0.3)
+        .staggerFrom('.tile-anchor', 1, {opacity: 0, x: 30, clearProps: 'all'}, 0.2, 0.3)
         .from('.__current', 1, {opacity: 0, y: -30, clearProps: 'all'}, 0)
     },
     leave (el, done) {
@@ -220,13 +233,13 @@ export default {
           .to('.arrow', 0.3, {rotation: -90}, 0)
           .to('.partner-content', 0.3, {x: 30, opacity: 0}, 0)
           .to('.partner-image', 0.3, {opacity: 0, width: 0}, 0)
-          .staggerTo('.tile-title', 1, {opacity: 0, x: 30}, 0.2, 0)
+          .staggerTo('.tile-anchor', 1, {opacity: 0, x: 30}, 0.2, 0)
           .to('.__current', 1, {opacity: 0, y: -30}, 0)
       } else {
         let tlLeave = new TimelineMax({onComplete: done})
         tlLeave.to('.partner-image', 0.3, {opacity: 0, width: 0}, 0)
           .to('.partner-content', 0.3, {x: 30, opacity: 0}, 0)
-          .staggerTo('.tile-title', 1, {opacity: 0, x: 30}, 0.2, 0)
+          .staggerTo('.tile-anchor', 1, {opacity: 0, x: 30}, 0.2, 0)
           .to('.__current', 1, {opacity: 0, y: -30}, 0)
       }
       let tlLeave = new TimelineMax({onComplete: done})
@@ -308,7 +321,7 @@ export default {
       }
     }
 
-    .tiles-titles {
+    .tiles-anchors {
       margin-top: 80px;
       @include for-desktop-up {
         margin-top: 120px;
@@ -319,7 +332,7 @@ export default {
       ul {
         li {
           padding-bottom: 10px;
-          .tile-title {
+          .tile-anchor {
             font-size: 20px;
             transition: color .3s;
             &.active {
@@ -340,7 +353,7 @@ export default {
     padding: 0 40px 0 20px;
     width: calc(37.5vw - 60px);
     max-width: 720px;
-    .tiles {
+    .tile {
       padding-top: 160px;
       position: relative;
       @include for-desktop-up {
@@ -354,13 +367,13 @@ export default {
       &:last-of-type {
         margin-bottom: 70vh;
       }
-      .content-tile-title {
+      .tile-title {
         margin-top: 0;
         font-family: 'Marklight';
         font-size: 38px;
         color: #808080;
       }
-      .content-tile-body {
+      .tile-body {
         font-size: 15px;
         line-height: 1.3;
         @include for-big-desktop-up {
