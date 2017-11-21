@@ -29,7 +29,7 @@
       <div class="tiles-titles">
         <ul>
           <li v-for="(tile, index) in currentPartner.tile" :key="tile.id">
-            <a
+            <a v-bind:href="'#' + tile.value.title_slug"
               v-on:click="setTileIndex(index)"
               class="tile-title"
               v-bind:class="{active: index === tileIndex}">
@@ -41,7 +41,10 @@
     </div>
 
     <div class="partner-content">
-      <tile :body="currentTile"></tile>
+      <div v-for="tile in currentPartner.tile" :key="tile.id" class="tiles" v-bind:id="tile.value.title_slug">
+        <p class="content-tile-title">{{ tile.value.title }}</p>
+        <div v-html="tile.value.body" class="content-tile-body"></div>
+      </div>
     </div>
 
     <div class="partner-image">
@@ -131,8 +134,7 @@ export default {
     return {
       partners: partners,
       currentPartner: currentPartner,
-      notCurrentPartners: notCurrentPartners,
-      currentTile: currentPartner.tile[0].value.body
+      notCurrentPartners: notCurrentPartners
     }
   },
   data () {
@@ -154,11 +156,7 @@ export default {
     },
     setTileIndex (index) {
       if (index !== this.$data.tileIndex) {
-        this.animateTileBody()
         this.$data.tileIndex = index
-        setTimeout(() => {
-          this.$data.currentTile = this.$data.currentPartner.tile[index].value.body
-        }, 200)
       }
     },
     togglePanel () {
@@ -342,22 +340,34 @@ export default {
       padding: 200px 40px 0 20px;
     }
     @include for-big-desktop-up {
-      padding: 255px 40px 0 20px;
+      padding: 0 40px 0 20px;
     }
-    .tile-body {
-      font-size: 15px;
-      line-height: 1.3;
-      margin-bottom: 100px;
-      @include for-big-desktop-up {
-        font-size: 16px;
+    .tiles {
+      padding-top: 255px;
+      &:first-of-type {
       }
-      h3 {
-        color: #808080;
+      &:last-of-type {
+        margin-bottom: 70vh;
       }
-      ul {
-        li {
-          margin-left: 14px;
-          list-style: initial;
+      .content-tile-title {
+        margin-top: 0;
+        font-family: 'Marklight';
+        font-size: 38px;
+      }
+      .content-tile-body {
+        font-size: 15px;
+        line-height: 1.3;
+        @include for-big-desktop-up {
+          font-size: 16px;
+        }
+        h3 {
+          color: #808080;
+        }
+        ul {
+          li {
+            margin-left: 14px;
+            list-style: initial;
+          }
         }
       }
     }
