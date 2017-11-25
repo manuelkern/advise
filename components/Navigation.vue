@@ -20,6 +20,7 @@
             <li v-for="(link, index) in siteMap.links[locales.selected]" :key="link.id"  class="link-wrapper">
               <nuxt-link
                 class="link"
+                v-bind:class="{ active: index === siteMap.currentIndex }"
                 @click.native="setNav(index)"
                 :to="{
                   name: 'locale-section',
@@ -38,6 +39,7 @@
               <nuxt-link 
                 class="locale"
                 @click.native="setLocale(locale.lang)"
+                v-bind:class="{ active: locale.lang === $route.params.locale }"
                 :to="{
                   to: 'locale',
                   params: {
@@ -78,7 +80,7 @@ export default {
     setCorrectActiveLinksOnPageLoad (locale, section) {
       this.setSelectedLocale(locale)
       this.siteMap.links[locale].map((link, index) => {
-        if (section === link.section_title_slug) {
+        if (typeof section !== 'undefined' && section === link.section_title_slug) {
           this.setSectionIndex(index)
         }
       })
@@ -165,7 +167,7 @@ a {
   &:hover {
     color: #676767;
   }
-  &.exact-active-link {
+  &.active {
     color: #EE3524;
   }
 }
