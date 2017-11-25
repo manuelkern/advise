@@ -20,7 +20,6 @@
             <li v-for="(link, index) in siteMap.links[locales.selected]" :key="link.id"  class="link-wrapper">
               <nuxt-link
                 class="link"
-                v-bind:class="{ active: index === siteMap.currentIndex }"
                 @click.native="setNav(index)"
                 :to="{
                   name: 'locale-section',
@@ -168,6 +167,9 @@ a {
     color: #676767;
   }
   &.active {
+    color: #EE3524;
+  }
+  &.exact-active-link {
     color: #EE3524;
   }
 }

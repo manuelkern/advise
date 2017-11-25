@@ -28,19 +28,23 @@
 
       <!-- LINKS TO TILE -->
 
-      <div class="tiles-anchors">
+      <scrollactive
+        class="tiles-anchors"
+        :offset="0"
+        :clickToScroll="true"
+        v-on:itemchanged="updateUrl()">
         <ul>
           <li v-for="(tile, index) in currentPartner.tile" :key="tile.id">
-            <a v-bind:href="'#' + tile.value.title_slug"
-              v-on:click="setLinkActive(tile.value.title_slug)"
-              v-bind:class="{active: linkActive === '#' + tile.value.title_slug}"
-              v-smooth-scroll="{duration: 1000}"
-              class="tile-anchor">
+            <nuxt-link :to="'#' + tile.value.title_slug"
+              @click.native="setLinkActive(tile.value.title_slug)"
+              v-bind:class="{'is-active': linkActive === '#' + tile.value.title_slug}"
+              class="tile-anchor scrollactive-item">
                 {{ tile.value.title }}
-            </a>
+            </nuxt-link>
           </li>
         </ul>
-      </div>
+      </scrollactive>
+
     </div>
 
     <!-- MAIN CONTENT -->
@@ -163,11 +167,8 @@ export default {
     setLinkActive (slug) {
       this.$data.linkActive = '#' + slug
     },
-    animateTileBody () {
-      let tileBody = document.getElementsByClassName('tile-body')
-      let animate = new TimelineMax()
-      animate.to(tileBody, 0.3, {opacity: 0})
-        .to(tileBody, 0.3, {opacity: 1})
+    updateUrl (e) {
+      console.log(e)
     },
     togglePanel () {
       if (!this.layout.panelOpen) {
@@ -335,7 +336,7 @@ export default {
           .tile-anchor {
             font-size: 20px;
             transition: color .3s;
-            &.active {
+            &.is-active {
               color: #EE3524;
             }
             &:hover {
@@ -356,16 +357,20 @@ export default {
     .tile {
       padding-top: 160px;
       position: relative;
+      &:last-of-type {
+        min-height: calc(100vh - 160px);
+      }
       @include for-desktop-up {
         padding-top: 200px;
+        &:last-of-type {
+          min-height: calc(100vh - 200px);
+        }
       }
       @include for-big-desktop-up {
         padding-top: 255px;
-      }
-      &:first-of-type {
-      }
-      &:last-of-type {
-        margin-bottom: 70vh;
+        &:last-of-type {
+          min-height: calc(100vh - 255px);
+        }
       }
       .tile-title {
         margin-top: 0;
