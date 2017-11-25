@@ -6,7 +6,7 @@
         <img class="big-advise" src="~/assets/images/advise.svg">
       </span>
 
-      <img class="logo" src="~/assets/images/logo.svg">
+      <nuxt-link to="/" class="logo"><img src="~/assets/images/logo.svg"></nuxt-link>
 
       <div class="navigation" v-bind:class="{open: nav.isOpen}">
 
@@ -177,6 +177,7 @@ a {
 .overlay {
   z-index: 800;
   width: 0;
+  top: 0;
   right: 31.25vw;
   height: 100%;
   background-color: #000000;
@@ -194,7 +195,13 @@ a {
   right: 20px;
   top: 20px;
   height: 360px;
+  width: 35px;
   z-index: 950;
+  img {
+    position: absolute;
+    height: 100%;
+    right: 0;
+  }
 }
 
 .navigation {
@@ -206,6 +213,7 @@ a {
   background-color: #F7F7F7;
   overflow: hidden;
   padding-left: 0;
+  top: 0;
   .toggle-nav {
     position: relative;
     height: 20px;

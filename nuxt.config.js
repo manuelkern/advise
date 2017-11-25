@@ -22,7 +22,7 @@ module.exports = {
   /*
   ** Customize the progress bar color
   */
-  loading: { color: '#EE3524' },
+  loading: 'components/Loading.vue',
   router: {
     linkExactActiveClass: 'exact-active-link',
   },
@@ -32,7 +32,9 @@ module.exports = {
   css: [
     { src: '~assets/css/main.scss', lang: 'scss' } // scss instead of sass
   ],
-  plugins: ['~/plugins/vue-scrollactive'],
+  plugins: [
+    { src: '~/plugins/vue-scrollactive' }
+  ],
   build: {
     vendor: ['axios','gsap'],
     /*

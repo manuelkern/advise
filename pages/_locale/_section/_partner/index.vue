@@ -30,17 +30,16 @@
 
       <scrollactive
         class="tiles-anchors"
-        :offset="0"
-        :clickToScroll="true"
-        v-on:itemchanged="updateUrl()">
+        :offset="5"
+        :duration="800"
+        :clickToScroll="true">
         <ul>
           <li v-for="(tile, index) in currentPartner.tile" :key="tile.id">
-            <nuxt-link :to="'#' + tile.value.title_slug"
-              @click.native="setLinkActive(tile.value.title_slug)"
-              v-bind:class="{'is-active': linkActive === '#' + tile.value.title_slug}"
+            <a :href="'#' + tile.value.title_slug"
+              @click.native="setLinkActive($event, tile.value.title_slug)"
               class="tile-anchor scrollactive-item">
                 {{ tile.value.title }}
-            </nuxt-link>
+            </a>
           </li>
         </ul>
       </scrollactive>
@@ -164,11 +163,9 @@ export default {
       setPanelOpen: 'setPanelOpen',
       resetPanel: 'resetPanel'
     }),
-    setLinkActive (slug) {
+    setLinkActive (event, slug) {
+      event.preventDefault()
       this.$data.linkActive = '#' + slug
-    },
-    updateUrl (e) {
-      console.log(e)
     },
     togglePanel () {
       if (!this.layout.panelOpen) {
@@ -355,28 +352,23 @@ export default {
     width: calc(37.5vw - 60px);
     max-width: 720px;
     .tile {
-      padding-top: 160px;
       position: relative;
+      margin-top: 0;
       &:last-of-type {
-        min-height: calc(100vh - 160px);
-      }
-      @include for-desktop-up {
-        padding-top: 200px;
-        &:last-of-type {
-          min-height: calc(100vh - 200px);
-        }
-      }
-      @include for-big-desktop-up {
-        padding-top: 255px;
-        &:last-of-type {
-          min-height: calc(100vh - 255px);
-        }
+        min-height: 100vh;
       }
       .tile-title {
         margin-top: 0;
         font-family: 'Marklight';
         font-size: 38px;
         color: #808080;
+        padding-top: 160px;
+        @include for-desktop-up {
+          padding-top: 200px;
+        }
+        @include for-big-desktop-up {
+          padding-top: 255px;
+        }
       }
       .tile-body {
         font-size: 15px;
@@ -396,6 +388,9 @@ export default {
               margin: 0;
             }
           }
+        }
+        p:last-of-type {
+          margin-bottom: 0;
         }
       }
       &.active {

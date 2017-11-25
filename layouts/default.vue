@@ -46,3 +46,15 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .border {
+    position: fixed;
+    z-index: 100;
+    height: 100vh;
+    width: 4px;
+    left: 0;
+    top: 0;
+    background-color: #EE3524;
+  }
+</style>
