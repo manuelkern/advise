@@ -1,3 +1,6 @@
+const config = require('config');
+const cockpit = config.get('cockpit');
+
 module.exports = {
   /*
   ** Headers of the page
@@ -49,11 +52,5 @@ module.exports = {
   /*
   ** env configuration
   */
-  env: {
-    cockpit: {
-      apiUrl: 'http://advise.api:8888/api',
-      apiToken: 'ca23a210b0e7fd2cf9df18cd3c6e7e',
-      baseUrl: 'http://advise.api:8888'
-    }
-  }
+  env: cockpit
 }

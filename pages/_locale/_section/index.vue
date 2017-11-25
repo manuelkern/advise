@@ -49,7 +49,7 @@ export default {
   data () {
     return {
       isReady: false,
-      baseUrl: process.env.cockpit.baseUrl
+      baseUrl: process.env.apiBaseUrl
     }
   },
   async asyncData ({store, env, params}) {
@@ -68,7 +68,7 @@ export default {
     //
     // GET SECTION
     //
-    let { data } = await axios.get(`${env.cockpit.apiUrl}/collections/get/section?token=${env.cockpit.apiToken}&filter[_id]=${id}&populate=1`)
+    let { data } = await axios.get(`${env.apiUrl}/collections/get/section?token=${env.apiToken}&filter[_id]=${id}&populate=1`)
     //
     // SET LOCALIZED KEYS
     //

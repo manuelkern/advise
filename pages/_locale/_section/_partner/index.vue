@@ -88,7 +88,7 @@ export default {
     //
     // GET PARTNERS
     //
-    let { data } = await axios.get(`${env.cockpit.apiUrl}/collections/get/partner?token=${env.cockpit.apiToken}`)
+    let { data } = await axios.get(`${env.apiUrl}/collections/get/partner?token=${env.apiToken}`)
     //
     // SET LOCALIZED KEYS
     //
@@ -151,7 +151,7 @@ export default {
   },
   data () {
     return {
-      baseUrl: process.env.cockpit.baseUrl,
+      baseUrl: process.env.apiBaseUrl,
       linkActive: ''
     }
   },

@@ -78,7 +78,7 @@ export const actions = {
     let links = {}
     links.en = []
     links.fr = []
-    let { data } = await axios.get(process.env.cockpit.apiUrl + '/regions/data/sitemap?token=' + process.env.cockpit.apiToken)
+    let { data } = await axios.get(process.env.apiUrl + '/regions/data/sitemap?token=' + process.env.apiToken)
     data.section.map((section) => {
       links.en.push(section.value)
     })

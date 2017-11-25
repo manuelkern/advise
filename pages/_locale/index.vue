@@ -16,7 +16,7 @@ export default {
     let localizedHome = {
       title: ''
     }
-    let { data } = await axios.get(`${env.cockpit.apiUrl}/collections/get/section?token=${env.cockpit.apiToken}&filter[_id]=${id}`)
+    let { data } = await axios.get(`${env.apiUrl}/collections/get/section?token=${env.apiToken}&filter[_id]=${id}`)
     data.entries.map((homepage) => {
       if (params.locale === 'en') {
         localizedHome = {
