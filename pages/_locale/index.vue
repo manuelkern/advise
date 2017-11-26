@@ -48,20 +48,24 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .home-content{
-    width: 31.25vw;
-    margin-left: 6.25vw;
-    font-family: 'MarkLight';
+    width: 37.5vw;
+    margin-left: 12.5vw;
     .home-title {
+      margin-top: 55px;
       font-size: 64px;
+      color: #676767;
     }
     .home-body {
       p {
-        color: red;
         &:first-child {
+          font-family: 'MarkLight';
           font-size: 38px;
         }
+      }
+      a {
+        color: #676767;
       }
     }
   }

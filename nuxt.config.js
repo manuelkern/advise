@@ -33,7 +33,8 @@ module.exports = {
     { src: '~assets/css/main.scss', lang: 'scss' } // scss instead of sass
   ],
   plugins: [
-    { src: '~/plugins/vue-scrollactive' }
+    { src: '~/plugins/vue-scrollactive' },
+    { src: '~/plugins/vue-google-maps' }
   ],
   build: {
     vendor: ['axios','gsap'],

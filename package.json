@@ -30,6 +30,7 @@
     "gsap": "^1.20.3",
     "node-sass": "^4.7.1",
     "sass-loader": "^6.0.6",
-    "vue-scrollactive": "^0.5.1"
+    "vue-scrollactive": "^0.5.1",
+    "vue2-google-maps": "^0.8.4"
   }
 }
