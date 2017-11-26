@@ -32,7 +32,8 @@
         class="tiles-anchors"
         :offset="5"
         :duration="800"
-        :clickToScroll="true">
+        :clickToScroll="true"
+        @itemchanged="updateScroll(...arguments)">
         <ul>
           <li v-for="(tile, index) in currentPartner.tile" :key="tile.id">
             <a :href="'#' + tile.value.title_slug"
@@ -167,6 +168,9 @@ export default {
       event.preventDefault()
       this.$data.linkActive = '#' + slug
     },
+    updateScroll (e, c, l) {
+      history.pushState(null, null, c.hash)
+    },
     togglePanel () {
       if (!this.layout.panelOpen) {
         this.panelOpens()
@@ -209,6 +213,10 @@ export default {
     }
   },
   mounted () {
+    window.onhashchange = () => {
+      // this.$router.push({ name: 'locale-section' })
+      this.$router.go(-1)
+    }
   },
   transition: {
     name: 'partner-transition',

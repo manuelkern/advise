@@ -95,6 +95,7 @@ export default {
         triggers: $el.getElementsByClassName('trigger'),
         list: $el.getElementsByClassName('link-wrapper'),
         sectionLink: $el.getElementsByClassName('link'),
+        sectionLinks: $el.getElementsByClassName('links'),
         advise: $el.getElementsByClassName('big-advise')
       }
       return $targets
@@ -103,9 +104,10 @@ export default {
       let tlNavOpens = new TimelineMax()
       let $t = this.set$Targets($el)
       tlNavOpens.to($t.overlay, 0.8, {width: '68.75vw'}, 'start')
-        .to($t.navigation, 0.6, {width: '31.25vw', paddingLeft: '20px'}, 'start')
-        .to($t.triggers, 0.4, {y: 30}, 'start')
+        .to($t.navigation, 0.6, {width: '31.25vw'}, 'start')
+        .to($t.triggers, 0.4, {y: 30, x: 20}, 'start')
         .staggerTo($t.sectionLink, 0.4, {autoAlpha: 1}, 0.2, 'start')
+        .to($t.sectionLinks, 0.4, {x: 20}, 'start')
         .staggerFrom($t.list, 0.4, {x: 50, clearProps: 'all'}, 0.2, 'start')
         .to($t.logo, 0.4, {x: 60}, 0.1)
         .to($t.advise, 0.8, {opacity: 0.5}, 0.6)
@@ -115,8 +117,9 @@ export default {
       let tlNavCloses = new TimelineMax()
       tlNavCloses.to($t.overlay, 0.4, {width: 0}, 'start')
         .to($t.logo, 0.4, {x: 0}, 0.1)
-        .to($t.navigation, 0.4, {width: '6.25vw', paddingLeft: '0', clearProps: 'padding-left'}, 'start')
-        .to($t.triggers, 0.6, {y: 0}, 'start')
+        .to($t.navigation, 0.4, {width: '6.25vw', clearProps: 'padding-left'}, 'start')
+        .to($t.triggers, 0.6, {y: 0, x: 0}, 'start')
+        .to($t.sectionLinks, 0.4, {x: 40}, 'start')
         .staggerTo($t.sectionLink, 0.2, {autoAlpha: 0, clearProps: 'all'}, 0.2, 'start')
         .to($t.advise, 0.4, {opacity: 0}, 'start')
     },
@@ -134,9 +137,7 @@ export default {
     }
   },
   created () {
-    let locale = this.$route.params.locale
-    let section = this.$route.params.section
-    this.setCorrectActiveLinksOnPageLoad(locale, section)
+    this.setCorrectActiveLinksOnPageLoad(this.$route.params.locale, this.$route.params.section)
   },
   mounted () {
     let $el = document.getElementById('nav-wrapper')
