@@ -52,6 +52,7 @@
 import axios from 'axios'
 import { mapState } from 'vuex'
 import { TimelineMax } from 'gsap'
+import { forIn, mutateKeysForLocale, gmStyles } from '~/utils/utils.js'
 export default {
   computed: mapState([
     'siteMap'
@@ -60,177 +61,24 @@ export default {
     return {
       isReady: false,
       baseUrl: process.env.apiBaseUrl,
-      styles: [
-        { 'featureType': 'water',
-          'elementType': 'geometry',
-          'stylers': [
-            { 'color': '#e9e9e9' },
-            { 'lightness': 17 }
-          ]
-        },
-        {
-          'featureType': 'landscape',
-          'elementType': 'geometry',
-          'stylers': [
-            { 'color': '#f5f5f5' },
-            { 'lightness': 20 }
-          ]
-        },
-        {
-          'featureType': 'road.highway',
-          'elementType': 'geometry.fill',
-          'stylers': [
-            { 'color': '#ffffff' },
-            { 'lightness': 17 }
-          ]
-        },
-        {
-          'featureType': 'road.highway',
-          'elementType': 'geometry.stroke',
-          'stylers': [
-            { 'color': '#ffffff' },
-            { 'lightness': 29 },
-            { 'weight': 0.2 }
-          ]
-        },
-        {
-          'featureType': 'road.arterial',
-          'elementType': 'geometry',
-          'stylers': [
-            { 'color': '#ffffff' },
-            { 'lightness': 18 }
-          ]
-        },
-        {
-          'featureType': 'road.local',
-          'elementType': 'geometry',
-          'stylers': [
-            { 'color': '#ffffff' },
-            { 'lightness': 16 }
-          ]
-        },
-        {
-          'featureType': 'poi',
-          'elementType': 'geometry',
-          'stylers': [
-            { 'color': '#f5f5f5' },
-            { 'lightness': 21 }
-          ]
-        },
-        {
-          'featureType': 'poi.park',
-          'elementType': 'geometry',
-          'stylers': [
-            { 'color': '#dedede' },
-            { 'lightness': 21 }
-          ]
-        },
-        {
-          'elementType': 'labels.text.stroke',
-          'stylers': [
-            { 'visibility': 'on' },
-            { 'color': '#ffffff' },
-            { 'lightness': 16 }
-          ]
-        },
-        {
-          'elementType': 'labels.text.fill',
-          'stylers': [
-            { 'saturation': 36 },
-            { 'color': '#333333' },
-            { 'lightness': 40 }
-          ]
-        },
-        {
-          'elementType': 'labels.icon',
-          'stylers': [
-            { 'visibility': 'off' }
-          ]
-        },
-        {
-          'featureType': 'transit',
-          'elementType': 'geometry',
-          'stylers': [
-            { 'color': '#f2f2f2' },
-            { 'lightness': 19 }
-          ]
-        },
-        {
-          'featureType': 'administrative',
-          'elementType': 'geometry.fill',
-          'stylers': [
-            { 'color': '#fefefe' },
-            { 'lightness': 20 }
-          ]
-        },
-        {
-          'featureType': 'administrative',
-          'elementType': 'geometry.stroke',
-          'stylers': [
-            { 'color': '#fefefe' },
-            { 'lightness': 17 },
-            { 'weight': 1.2 }
-          ]
-        }
-      ]
+      styles: gmStyles
     }
   },
   async asyncData ({store, env, params}) {
     let id = null
-    let localizedKeys = {}
-    let notLocalizedKeys = {}
     let section = {}
-    //
-    // GET THE RIGHT ID
-    //
+
     store.state.siteMap.links[params.locale].map((link) => {
       if (link.section_title_slug === params.section) {
         id = link.section_link._id
       }
     })
-    //
-    // GET SECTION
-    //
+
     let { data } = await axios.get(`${env.apiUrl}/collections/get/section?token=${env.apiToken}&filter[_id]=${id}&populate=1`)
-    //
-    // SET LOCALIZED KEYS
-    //
-    let fields = data.fields
-    let keys = Object.keys(fields)
-    keys.forEach((key) => {
-      if (fields[key].localize) {
-        if (params.locale === 'en') {
-          localizedKeys[key] = (key)
-          localizedKeys.title_slug = 'title_slug'
-        } else {
-          localizedKeys[key] = (key + '_' + params.locale)
-          let titleSlug = 'title_' + params.locale + '_slug'
-          localizedKeys.title_slug = titleSlug
-        }
-      } else {
-        notLocalizedKeys[key] = (key)
-        notLocalizedKeys._id = '_id'
-      }
-    })
-    let sectionKeysAndValues = Object.assign(localizedKeys, notLocalizedKeys)
-    //
-    // FUNCTION TO LOOP KEYS AND VALUES
-    //
-    function forIn (obj, fn, thisObj) {
-      for (let key in obj) {
-        if (exec(fn, obj, key, thisObj) === false) {
-          break
-        }
-      }
-      function exec (fn, obj, key, thisObj) {
-        return fn.call(thisObj, obj[key], key, obj)
-      }
-      return forIn
-    }
-    //
-    // BUILD SECTION
-    //
-    forIn(sectionKeysAndValues, (val, key) => {
+
+    let keys = mutateKeysForLocale(data.fields, params.locale)
+
+    forIn(keys, (val, key) => {
       section[key] = data.entries[0][val]
     })
 

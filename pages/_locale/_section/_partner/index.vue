@@ -37,7 +37,6 @@
         <ul>
           <li v-for="(tile, index) in currentPartner.tile" :key="tile.id">
             <a :href="'#' + tile.value.title_slug"
-              @click.native="setLinkActive($event, tile.value.title_slug)"
               class="tile-anchor scrollactive-item">
                 {{ tile.value.title }}
             </a>
@@ -54,8 +53,7 @@
         v-for="tile in currentPartner.tile"
         :key="tile.id"
         class="tile"
-        v-bind:id="tile.value.title_slug"
-        v-bind:class="{active: linkActive === '#' + tile.value.title_slug}">
+        v-bind:id="tile.value.title_slug">
         <p class="tile-title">{{ tile.value.title }}</p>
         <div v-html="tile.value.body" class="tile-body"></div>
       </div>
@@ -74,6 +72,7 @@
 
 import { mapState, mapActions } from 'vuex'
 import { TimelineMax } from 'gsap'
+import { forIn, mutateKeysForLocale } from '~/utils/utils.js'
 import axios from 'axios'
 import Tile from '~/components/Tile'
 export default {
@@ -85,53 +84,16 @@ export default {
     'layout'
   ]),
   async asyncData ({store, env, params}) {
-    let localizedKeys = {}
-    let notLocalizedKeys = {}
     let partners = []
     let Partner = class {}
-    //
-    // GET PARTNERS
-    //
+
     let { data } = await axios.get(`${env.apiUrl}/collections/get/partner?token=${env.apiToken}`)
-    //
-    // SET LOCALIZED KEYS
-    //
-    let fields = data.fields
-    let keys = Object.keys(fields)
-    keys.forEach((key) => {
-      if (fields[key].localize) {
-        if (params.locale === 'en') {
-          localizedKeys[key] = (key)
-        } else {
-          localizedKeys[key] = (key + '_' + params.locale)
-        }
-      } else {
-        notLocalizedKeys[key] = (key)
-        notLocalizedKeys._id = '_id'
-        notLocalizedKeys.name_slug = 'name_slug'
-      }
-    })
-    let partnerKeysAndValues = Object.assign(localizedKeys, notLocalizedKeys)
-    //
-    // FUNCTION TO LOOP KEYS AND VALUES
-    //
-    function forIn (obj, fn, thisObj) {
-      for (let key in obj) {
-        if (exec(fn, obj, key, thisObj) === false) {
-          break
-        }
-      }
-      function exec (fn, obj, key, thisObj) {
-        return fn.call(thisObj, obj[key], key, obj)
-      }
-      return forIn
-    }
-    //
-    // BUILD PARTNERS
-    //
+
+    let localizedKeys = mutateKeysForLocale(data.fields, params.locale)
+
     data.entries.map((p, index) => {
       let partner = new Partner()
-      forIn(partnerKeysAndValues, (val, key) => {
+      forIn(localizedKeys, (val, key) => {
         partner[key] = p[val]
       })
       partners.push(partner)
@@ -148,15 +110,13 @@ export default {
     })
 
     return {
-      partners: partners,
       currentPartner: currentPartner,
       notCurrentPartners: notCurrentPartners
     }
   },
   data () {
     return {
-      baseUrl: process.env.apiBaseUrl,
-      linkActive: ''
+      baseUrl: process.env.apiBaseUrl
     }
   },
   methods: {
@@ -164,10 +124,6 @@ export default {
       setPanelOpen: 'setPanelOpen',
       resetPanel: 'resetPanel'
     }),
-    setLinkActive (event, slug) {
-      event.preventDefault()
-      this.$data.linkActive = '#' + slug
-    },
     updateScroll (e, c, l) {
       history.pushState(null, null, c.hash)
     },
@@ -206,16 +162,10 @@ export default {
   },
   created () {
     this.resetPanel()
-    if (this.$route.hash) {
-      this.$data.linkActive = this.$route.hash
-    } else {
-      this.$data.linkActive = '#' + this.currentPartner.tile[0].value.title_slug
-    }
   },
   mounted () {
     window.onhashchange = () => {
       this.$router.push({ name: 'locale-section' })
-      // this.$router.go(-1)
     }
   },
   transition: {
