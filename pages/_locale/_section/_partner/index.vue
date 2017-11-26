@@ -214,8 +214,8 @@ export default {
   },
   mounted () {
     window.onhashchange = () => {
-      // this.$router.push({ name: 'locale-section' })
-      this.$router.go(-1)
+      this.$router.push({ name: 'locale-section' })
+      // this.$router.go(-1)
     }
   },
   transition: {
