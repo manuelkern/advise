@@ -14,32 +14,29 @@ export const mutateKeysForLocale = (fields, locale) => {
   let localizedKeys = {}
   let notLocalizedKeys = {}
   let keys = Object.keys(fields)
-
   keys.forEach((key) => {
-    if (fields[key].localize) {
-      if (locale === 'en') {
-        localizedKeys[key] = key
-      } else {
-        localizedKeys[key] = key + '_' + locale
-      }
-    } else {
+    notLocalizedKeys._id = '_id'
+    if (!fields[key].localize) {
       notLocalizedKeys[key] = key
-      notLocalizedKeys._id = '_id'
     }
-  })
-
-  keys.forEach((key) => {
-    if (fields[key].options.slug && fields[key].localize) {
+    if (fields[key].localize && locale === 'en') {
+      localizedKeys[key] = key
+    }
+    if (fields[key].localize && locale !== 'en') {
+      localizedKeys[key] = key + '_' + locale
+    }
+    if (fields[key].options.slug && fields[key].localize && locale !== 'en') {
       localizedKeys[key + '_slug'] = key + '_' + locale + '_slug'
+    }
+    if (fields[key].options.slug && fields[key].localize && locale === 'en') {
+      localizedKeys[key + '_slug'] = key + '_slug'
     }
     if (fields[key].options.slug && !fields[key].localize) {
       notLocalizedKeys[key + '_slug'] = key + '_slug'
     }
   })
-
-  let correctedKeys = Object.assign(localizedKeys, notLocalizedKeys)
-
-  return correctedKeys
+  let newKeys = Object.assign(localizedKeys, notLocalizedKeys)
+  return newKeys
 }
 
 export const gmStyles = [

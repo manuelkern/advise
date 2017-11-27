@@ -1,6 +1,6 @@
 <template>
   <div class="partners-wrapper">
-
+ 
     <div class="partner-controls">
 
       <div class="show-partners" v-on:click="togglePanel"><img src="~/assets/images/arrow.svg" class="arrow"></div>
@@ -35,7 +35,7 @@
         :clickToScroll="true"
         @itemchanged="updateScroll(...arguments)">
         <ul>
-          <li v-for="(tile, index) in currentPartner.tile" :key="tile.id">
+          <li v-for="(tile, index) in currentPartner.tile" :key="tile.id" class="line">
             <a :href="'#' + tile.value.title_slug"
               class="tile-anchor scrollactive-item">
                 {{ tile.value.title }}
@@ -175,10 +175,11 @@ export default {
     enter (el, done) {
       let tlEnter = new TimelineMax({onComplete: done})
       tlEnter.from('.image', 3, {x: 60})
-        .from('.partner-image', 0.6, {opacity: 0, width: 0}, 0)
-        .from('.partner-content', 0.6, {x: -30, opacity: 0, clearProps: 'all'}, 0.3)
-        .staggerFrom('.tile-anchor', 1, {opacity: 0, x: 30, clearProps: 'all'}, 0.2, 0.3)
-        .from('.__current', 1, {opacity: 0, y: -30, clearProps: 'all'}, 0)
+        .from('.partner-image', 0.6, {opacity: 0, width: 0, clearProps: 'all'}, 0)
+        .from('.tile', 1, {x: 100, opacity: 0}, 0)
+        .staggerFrom('.line', 1, {x: -200, opacity: 0}, 0.2, 0)
+        .staggerFrom('.tile-anchor', 1, {opacity: 0, x: 200, clearProps: 'all'}, 0.2, 0.4)
+        .from('.__current', 1, {opacity: 0, x: -100, clearProps: 'all'}, 0)
     },
     leave (el, done) {
       if (this.$store.state.layout.panelOpen) {
@@ -187,16 +188,19 @@ export default {
           .to('.not-current-overlay', 0.5, {autoAlpha: 0}, 0.2)
           .to('.not-current-overlay', 0.5, {y: '-100%'}, 0.2)
           .to('.arrow', 0.3, {rotation: -90}, 0)
-          .to('.partner-content', 0.3, {x: 30, opacity: 0}, 0)
+          .to('.tile', 0.8, {opacity: 0, x: 100}, 0)
           .to('.partner-image', 0.3, {opacity: 0, width: 0}, 0)
-          .staggerTo('.tile-anchor', 1, {opacity: 0, x: 30}, 0.2, 0)
-          .to('.__current', 1, {opacity: 0, y: -30}, 0)
+          .staggerTo('.line', 1, {x: -200, opacity: 0}, 0.2, 0)
+          .to('.tiles-anchors', 0.8, {opacity: 0, x: -100}, 0)
+          .to('.__current', 1, {opacity: 0, x: -100}, 0)
       } else {
         let tlLeave = new TimelineMax({onComplete: done})
         tlLeave.to('.partner-image', 0.3, {opacity: 0, width: 0}, 0)
-          .to('.partner-content', 0.3, {x: 30, opacity: 0}, 0)
           .staggerTo('.tile-anchor', 1, {opacity: 0, x: 30}, 0.2, 0)
-          .to('.__current', 1, {opacity: 0, y: -30}, 0)
+          .to('.tile', 0.8, {opacity: 0, x: 100}, 0)
+          .staggerTo('.line', 1, {x: -200, opacity: 0}, 0.2, 0)
+          .to('.tiles-anchors', 0.8, {opacity: 0, x: -100}, 0)
+          .to('.__current', 1, {opacity: 0, x: -100}, 0)
       }
       let tlLeave = new TimelineMax({onComplete: done})
       tlLeave.to('.partner-image', 0.5, {opacity: 0}, 0)
@@ -213,19 +217,25 @@ export default {
   .partner-controls {
     position: fixed;
     z-index: 200;
-    padding-top: 66px;
+    padding: 66px 0 0 0;
     left: 6.25vw;
     top: 0;
     width: 25vw;
+    height: 100vh;
+    border-left: 1px solid rgba(149, 152, 154, 0.2);
+    overflow: hidden;
+
     .partner-name {
       font-family: 'Marklight';
       font-size: 24px;
       margin: 0 0 6px 0;
+      padding-left: 20px;
       &.__current {
         color: #EE3524;
       }
       @include for-big-desktop-up {
         margin: 0 0 6px 0;
+        padding-left: 40px;
         font-size: 38px;
       }
     }
@@ -274,11 +284,13 @@ export default {
         left: 0;
         background-color: #000000;
         visibility: hidden;
+        z-index: 200;
       }
     }
 
     .tiles-anchors {
       margin-top: 80px;
+      position: relative;
       @include for-desktop-up {
         margin-top: 120px;
       }
@@ -287,10 +299,16 @@ export default {
       }
       ul {
         li {
-          padding-bottom: 10px;
+          padding: 0 0 10px 20px;
+          @include for-big-desktop-up {
+            padding: 0 0 20px 40px;
+          }
           .tile-anchor {
-            font-size: 20px;
+            font-size: 16px;
             transition: color .3s;
+            @include for-big-desktop-up {
+              font-size: 20px;
+            }
             &.is-active {
               color: #EE3524;
             }
@@ -309,9 +327,17 @@ export default {
     padding: 0 40px 0 20px;
     width: calc(37.5vw - 60px);
     max-width: 720px;
+    border-left: 1px solid rgba(149, 152, 154, 0.2);
+    overflow-x: hidden;
+    @include for-big-desktop-up {
+      padding: 0 40px 0 40px;
+    }
     .tile {
       position: relative;
       margin-top: 0;
+      &:first-of-type {
+        margin-top: 5px;
+      }
       &:last-of-type {
         min-height: 100vh;
       }
@@ -336,6 +362,7 @@ export default {
         }
         h3 {
           color: #808080;
+          margin-bottom: 6px;
         }
         ul {
           li {

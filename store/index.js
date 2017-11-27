@@ -36,8 +36,7 @@ export const state = () => ({
       fr: []
     }
   },
-  homePage: {},
-  section: {}
+  homePage: {}
 })
 
 export const mutations = {
@@ -61,9 +60,6 @@ export const mutations = {
   },
   setHomePage (state, homePage) {
     state.homePage = homePage
-  },
-  setSection (state, section) {
-    state.section = section
   },
   setPanelOpen (state) {
     state.layout.panelOpen = !state.layout.panelOpen
@@ -102,9 +98,6 @@ export const actions = {
   },
   setSectionIndex ({commit}, index) {
     commit('setSectionIndex', index)
-  },
-  setSection ({commit}, section) {
-    commit('setSection', section)
   },
   setPanelOpen ({commit}) {
     commit('setPanelOpen')

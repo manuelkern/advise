@@ -25,6 +25,63 @@
 
     <!-- PRACTICE-AREAS -->
     <div v-if="siteMap.currentIndex === 1" class="section practice-areas">
+      
+      <div class="controls" v-if="$route.params.locale === 'fr'">
+        <scrollactive
+          class="anchors"
+          :offset="5"
+          :duration="800"
+          :clickToScroll="true">
+          <ul>
+            <li v-for="(practice, index) in section.practices" :key="index">
+              <a :href="'#' + practice.title_fr_slug"
+                class="tile-anchor scrollactive-item">
+                  {{ practice.title_fr }}
+              </a>
+            </li>
+          </ul>
+        </scrollactive>
+      </div>
+
+      <div class="practices-content" v-if="$route.params.locale === 'fr'">
+        <div
+          class="practice"
+          v-bind:id="practice.title_fr_slug"
+          v-for="(practice, index) in section.practices"
+          :key="index">
+          <p class="practice-title">{{ practice.title_fr }}</p>
+          <div class="practice-body" v-html="practice.body_fr"></div>
+        </div>
+      </div>
+
+      <div class="controls" v-if="$route.params.locale === 'en'">
+        <scrollactive
+          class="anchors"
+          :offset="5"
+          :duration="800"
+          :clickToScroll="true">
+          <ul>
+            <li v-for="(practice, index) in section.practices" :key="index">
+              <a :href="'#' + practice.title_slug"
+                class="tile-anchor scrollactive-item">
+                  {{ practice.title }}
+              </a>
+            </li>
+          </ul>
+        </scrollactive>
+      </div>
+
+      <div class="practices-content" v-if="$route.params.locale === 'en'">
+        <div
+          class="practice"
+          v-bind:id="practice.title_slug"
+          v-for="(practice, index) in section.practices"
+          :key="index">
+          <p class="practice-title">{{ practice.title }}</p>
+          <div class="practice-body" v-html="practice.body"></div>
+        </div>
+      </div>
+
     </div>
 
     <!-- CONTACT -->
@@ -66,8 +123,6 @@ export default {
   },
   async asyncData ({store, env, params}) {
     let id = null
-    let section = {}
-
     store.state.siteMap.links[params.locale].map((link) => {
       if (link.section_title_slug === params.section) {
         id = link.section_link._id
@@ -75,11 +130,13 @@ export default {
     })
 
     let { data } = await axios.get(`${env.apiUrl}/collections/get/section?token=${env.apiToken}&filter[_id]=${id}&populate=1`)
-
+    let section = {}
     let keys = mutateKeysForLocale(data.fields, params.locale)
 
     forIn(keys, (val, key) => {
-      section[key] = data.entries[0][val]
+      if (data.entries[0][val]) {
+        section[key] = data.entries[0][val]
+      }
     })
 
     return { section: section, isReady: true }
@@ -91,24 +148,24 @@ export default {
     enter (el, done) {
       let tlEnter = new TimelineMax({onComplete: done})
       tlEnter.from('.bg', 3, {x: 60})
-        .from('.bg-wrapper', 0.6, {opacity: 0, width: 0}, 0)
-        .from('.title', 1, {y: -20, opacity: 0}, 0)
+        .from('.bg-wrapper', 0.6, {opacity: 0, width: 0, clearProps: 'all'}, 0)
+        .from('.title', 1, {x: -20, opacity: 0}, 0)
         .staggerFrom('.partner-link', 0.6, {opacity: 0}, 0.2, 0.2)
     },
     leave (el, done) {
       let tlLeave = new TimelineMax({onComplete: done})
       tlLeave.to('.bg-wrapper', 0.5, {opacity: 0}, 0)
         .staggerTo('.partner-link', 0.6, {opacity: 0}, 0.1, 0)
-        .to('.title', 0.4, {y: -20, opacity: 0}, 0)
+        .to('.title', 0.4, {x: -20, opacity: 0}, 0)
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+@import '~assets/css/vars.scss';
  .section-wrapper {
-   padding: 63px 0 0 6.25vw;
-   width: 56.25vw;
+   width: 68.75vw;
     .bg-wrapper {
       position: fixed;
       top: 0;
@@ -129,10 +186,18 @@ export default {
       color: #EE3524;
       margin: 0 0 6px 0;
       font-size: 38px;
+      position: fixed;
+      padding: 63px 0 0 6.25vw;
+      word-spacing: 100vw;
+      width: 25vw;
+      @include for-big-desktop-up {
+        word-spacing: inherit;
+      }
     }
     .section {
     }
     .partners {
+      padding: 110px 0 0 6.25vw;
       ul {
         li {
           padding: 6px 0;
@@ -151,7 +216,108 @@ export default {
     }
     .practice-areas {
 
-    },
+      .controls {
+        position: fixed;
+        z-index: 200;
+        padding: 66px 0 0 0;
+        left: 6.25vw;
+        top: 0;
+        width: 25vw;
+        height: 100vh;
+        // border-left: 1px solid rgba(149, 152, 154, 0.2);
+        overflow: hidden;
+
+        .anchors {
+          margin-top: 146px;
+          position: relative;
+          padding-right: 3.125vw;
+          @include for-big-desktop-up {
+            margin-top: 199px;
+          }
+          ul {
+            li {
+              padding: 0 0 10px 0;
+              @include for-big-desktop-up {
+                padding: 0 0 20px 0;
+              }
+              .tile-anchor {
+                font-size: 16px;
+                transition: color .3s;
+                @include for-big-desktop-up {
+                  font-size: 20px;
+                }
+                &.is-active {
+                  color: #EE3524;
+                }
+                &:hover {
+                  color: #676767;
+                  cursor: pointer;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .practices-content {
+        margin-left: 31.25vw;
+        padding: 0;
+        width: 37.5vw;
+        max-width: 720px;
+        border-left: 1px solid rgba(149, 152, 154, 0.2);
+        overflow-x: hidden;
+        background-color: white;
+        position: relative;
+
+        .practice {
+          padding: 0 3.125vw 0 3.125vw;
+          position: relative;
+          margin-top: 0;
+          &:first-of-type {
+            margin-top: 5px;
+          }
+          &:last-of-type {
+            min-height: 100vh;
+          }
+
+          .practice-title {
+            margin-top: 0;
+            font-family: 'Marklight';
+            font-size: 38px;
+            color: #808080;
+            padding-top: 200px;
+            @include for-big-desktop-up {
+              padding-top: 255px;
+            }
+          }
+
+          .practice-body {
+            font-size: 15px;
+            line-height: 1.3;
+            @include for-big-desktop-up {
+              font-size: 18px;
+            }
+            h3 {
+              color: #808080;
+              margin-bottom: 6px;
+            }
+            ul {
+              li {
+                padding: 10px 0;
+                margin-left: 14px;
+                list-style: initial;
+                h3 {
+                  margin: 0;
+                }
+              }
+            }
+            p:last-of-type {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
+    }
     .contact {
       .vue-map-container {
         width: 50vw;

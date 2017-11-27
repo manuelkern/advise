@@ -2,6 +2,7 @@
   <div id="app">
     <navigation></navigation>
     <nuxt/>
+    <div class="border"></div>
   </div>
 </template>
 
@@ -52,9 +53,10 @@ export default {
     position: fixed;
     z-index: 100;
     height: 100vh;
-    width: 4px;
+    width: 2px;
     left: 0;
     top: 0;
     background-color: #EE3524;
+    z-index: 999;
   }
 </style>

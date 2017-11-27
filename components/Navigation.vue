@@ -105,12 +105,12 @@ export default {
       let $t = this.set$Targets($el)
       tlNavOpens.to($t.overlay, 0.8, {width: '68.75vw'}, 'start')
         .to($t.navigation, 0.6, {width: '31.25vw'}, 'start')
-        .to($t.triggers, 0.4, {y: 30, x: 20}, 'start')
+        .to($t.triggers, 0.4, {y: 30, x: 18}, 'start')
         .staggerTo($t.sectionLink, 0.4, {autoAlpha: 1}, 0.2, 'start')
         .to($t.sectionLinks, 0.4, {x: 20}, 'start')
         .staggerFrom($t.list, 0.4, {x: 50, clearProps: 'all'}, 0.2, 'start')
         .to($t.logo, 0.4, {x: 60}, 0.1)
-        .to($t.advise, 0.8, {opacity: 0.5}, 0.6)
+        .from($t.advise, 0.8, {opacity: 0, x: 100}, 0.3)
     },
     animCloses ($el) {
       let $t = this.set$Targets($el)
@@ -121,7 +121,7 @@ export default {
         .to($t.triggers, 0.6, {y: 0, x: 0}, 'start')
         .to($t.sectionLinks, 0.4, {x: 40}, 'start')
         .staggerTo($t.sectionLink, 0.2, {autoAlpha: 0, clearProps: 'all'}, 0.2, 'start')
-        .to($t.advise, 0.4, {opacity: 0}, 'start')
+        .to($t.advise, 0.4, {opacity: 0, x: 100, clearProps: 'all'}, 'start')
     },
     toggleNav () {
       this.toggle()
@@ -159,9 +159,7 @@ a {
   text-transform: uppercase;
   letter-spacing: 4px;
   transition: color .3s;
-  font-size: 14px;
   @include for-desktop-up {
-    font-size: 16px;    
     letter-spacing: 5px;
   }
   &:hover {
@@ -186,8 +184,10 @@ a {
   opacity: 0.8;
   overflow: hidden;
   img {
-    opacity: 0;
+    opacity: 0.5;
     height: 100%;
+    position: absolute;
+    right: 6.25vw;
   }
 }
 
@@ -215,6 +215,7 @@ a {
   overflow: hidden;
   padding-left: 0;
   top: 0;
+
   .toggle-nav {
     position: relative;
     height: 20px;
@@ -223,9 +224,11 @@ a {
     a {
       position: absolute;
       cursor: pointer;
-      left: calc(3.125vw - 28px);
-      @include for-desktop-up {
-        left: calc(3.125vw - 33px);
+      font-size: 13px;
+      left: calc(3.125vw - 29px);
+      @include for-big-desktop-up {
+        font-size: 16px;
+        left: calc(3.125vw - 35px);
       }
     }
     .__open {
@@ -235,6 +238,7 @@ a {
       top: -30px;
     }
   }
+
   .links {
     position: relative;
     top: 200px;
@@ -253,25 +257,27 @@ a {
       }
     }
   }
+
   .locales {
     position: absolute;
     bottom: 60px;
-    left: calc(3.125vw - 13px);
+    left: calc(3.125vw - 12px);
     transition: left .6s;
-    @include for-desktop-up {
-      left: calc(3.125vw - 16.25px);
+    @include for-big-desktop-up {
+      left: calc(3.125vw - 15px);
     }
     ul {
       li {
-        padding: 6px 0;
-      }
-    }
-  }
-  &.open {
-    .locales {
-      left: calc(3.125vw - 8px);
-      @include for-desktop-up {
-        left: calc(3.125vw - 14px);
+        padding: 3px 0;
+        @include for-big-desktop-up {
+          padding: 6px 0;
+        }
+        a {
+          font-size: 13px;
+          @include for-big-desktop-up {
+            font-size: 16px;
+          }
+        }
       }
     }
   }
