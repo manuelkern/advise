@@ -1,6 +1,3 @@
-const config = require('config');
-const cockpit = config.get('cockpit');
-
 module.exports = {
   /*
   ** Headers of the page
@@ -36,6 +33,10 @@ module.exports = {
     { src: '~/plugins/vue-scrollactive' },
     { src: '~/plugins/vue-google-maps' }
   ],
+  modules: [
+    // Simple usage
+    '@nuxtjs/dotenv',
+  ],
   build: {
     vendor: ['axios','gsap'],
     /*
@@ -51,9 +52,5 @@ module.exports = {
         })
       }
     }
-  },
-  /*
-  ** env configuration
-  */
-  env: cockpit
+  }
 }
