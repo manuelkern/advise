@@ -31,11 +31,10 @@ module.exports = {
   ],
   plugins: [
     { src: '~/plugins/vue-scrollactive' },
-    { src: '~/plugins/vue-google-maps' }
+    { src: '~/plugins/vue-googlemaps' }
   ],
   modules: [
-    // Simple usage
-    '@nuxtjs/dotenv',
+    '@nuxtjs/dotenv'
   ],
   build: {
     vendor: ['axios','gsap'],

@@ -86,16 +86,15 @@
 
     <!-- CONTACT -->
     <div v-if="siteMap.currentIndex === 2" class="section contact">
-      <gmap-map
+      <googlemaps-map
+        class="vue-map-container"
         :center="{lat: section.location.lat, lng: section.location.lng}"
-        :zoom="17"
-        :options="{styles: styles}">
-        <gmap-marker
-          :position="section.location"
-          :clickable="true"
-          :draggable="true"
-        ></gmap-marker>
-      </gmap-map>
+        :zoom="16"
+        :options="{styles}">
+
+        <googlemaps-marker :position="section.location" />
+
+      </googlemaps-map>
     </div>
     
   </div>

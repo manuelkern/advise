@@ -15,7 +15,8 @@
   "dependencies": {
     "@nuxtjs/dotenv": "^1.1.0",
     "axios": "^0.17.1",
-    "nuxt": "^1.0.0-rc11"
+    "nuxt": "^1.0.0-rc11",
+    "vue-googlemaps": "0.0.6"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
@@ -30,7 +31,6 @@
     "gsap": "^1.20.3",
     "node-sass": "^4.7.1",
     "sass-loader": "^6.0.6",
-    "vue-scrollactive": "^0.5.1",
-    "vue2-google-maps": "^0.8.4"
+    "vue-scrollactive": "^0.5.1"
   }
 }

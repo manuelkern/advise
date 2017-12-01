@@ -137,9 +137,9 @@ export default {
     }
   },
   created () {
-    this.setCorrectActiveLinksOnPageLoad(this.$route.params.locale, this.$route.params.section)
   },
   mounted () {
+    this.setCorrectActiveLinksOnPageLoad(this.$route.params.locale, this.$route.params.section)
     let $el = document.getElementById('nav-wrapper')
     let tlNavAppears = new TimelineMax()
     let $t = this.set$Targets($el)
