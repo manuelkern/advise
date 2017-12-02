@@ -86,6 +86,9 @@
 
     <!-- CONTACT -->
     <div v-if="siteMap.currentIndex === 2" class="section contact">
+      
+      <div v-html="section.body"></div>
+
       <googlemaps-map
         class="vue-map-container"
         :center="{lat: section.location.lat, lng: section.location.lng}"
