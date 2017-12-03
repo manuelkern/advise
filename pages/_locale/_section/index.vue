@@ -1,6 +1,10 @@
 <template>
   <div class="section-wrapper" v-if="isReady">
 
+    <div class="bg-wrapper" v-if="section.image">
+      <div class="bg" v-bind:style="{ backgroundImage: 'url(' + baseUrl + section.image.path + ')' }"></div>
+    </div>
+
     <p class="title">{{ title }}</p>
 
     <!-- PARTNERS -->
@@ -153,8 +157,8 @@ export default {
       top: 0;
       right: 0;
       height: 100vh;
-      width: 37.5vw;
       overflow: hidden;
+      width: 37.5vw;
       .bg {
         width: calc(37.5vw + 60px);
         position: absolute;
