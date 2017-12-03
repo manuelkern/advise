@@ -26,7 +26,7 @@
         <span class="not-current-overlay"></span>
       </div>
 
-      <!-- LINKS TO TILE -->
+      <!-- LINKS TO COMPETENCIES -->
 
       <scrollactive
         class="tiles-anchors"
@@ -34,14 +34,16 @@
         :duration="800"
         :clickToScroll="true"
         @itemchanged="updateScroll(...arguments)">
+
         <ul>
-          <li v-for="(tile, index) in currentPartner.tile" :key="tile.id" class="line">
-            <a :href="'#' + tile.value.title_slug"
+          <li v-for="(competency, index) in currentPartner.competencies" :key="competency.id" class="line">
+            <a :href="'#' + competency.value.title_slug"
               class="tile-anchor scrollactive-item">
-                {{ tile.value.title }}
+                {{ competency.value.title }}
             </a>
           </li>
         </ul>
+
       </scrollactive>
 
     </div>
@@ -50,18 +52,20 @@
 
     <div class="partner-content">
       <div
-        v-for="tile in currentPartner.tile"
-        :key="tile.id"
+        v-for="competency in currentPartner.competencies"
+        :key="competency.id"
         class="tile"
-        v-bind:id="tile.value.title_slug">
-        <p class="tile-title">{{ tile.value.title }}</p>
-        <div v-html="tile.value.body" class="tile-body"></div>
+        v-bind:id="competency.value.title_slug">
+
+        <p class="tile-title">{{ competency.value.title }}</p>
+        <div v-html="competency.value.body" class="tile-body"></div>
+
       </div>
     </div>
 
     <!-- IMAGE -->
 
-    <div class="partner-image">
+    <div class="partner-image" v-if="currentPartner.image">
       <div class="image" v-bind:style="{ backgroundImage: 'url(' + baseUrl + currentPartner.image.path + ')' }"></div>
     </div>
 
@@ -87,7 +91,7 @@ export default {
     let partners = []
     let Partner = class {}
 
-    let { data } = await axios.get(`${env.apiUrl}/collections/get/partner?token=${env.apiToken}`)
+    let { data } = await axios.get(`${env.apiUrl}/collections/get/partners?token=${env.apiToken}`)
 
     let localizedKeys = mutateKeysForLocale(data.fields, params.locale)
 

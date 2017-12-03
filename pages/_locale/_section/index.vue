@@ -1,117 +1,86 @@
 <template>
   <div class="section-wrapper" v-if="isReady">
-    <div class="bg-wrapper">
-      <div class="bg" v-bind:style="{ backgroundImage: 'url(' + baseUrl + section.image.path + ')' }"></div>
-    </div>
-    <p class="title">{{ section.title }}</p>
+
+    <p class="title">{{ title }}</p>
+
     <!-- PARTNERS -->
-    <div v-if="siteMap.currentIndex === 0" class="section partners">
+    <div v-if="sectionIs === 'partners'" class="section partners">  
+
       <ul>
-        <li v-for="partner in section.partners" :key="partner.id">
+        <li v-for="partner in section" :key="partner.id">
           <nuxt-link
             class="partner-link"
             :to="{
               name: 'locale-section-partner',
               params: {
                 locale: $route.params.locale,
-                section: section.title_slug,
+                section: $route.params.section,
                 partner: partner.name_slug
               }
             }">
             {{ partner.name }}</nuxt-link>
         </li>
       </ul>
+      
     </div>
 
-    <!-- PRACTICE-AREAS -->
-    <div v-if="siteMap.currentIndex === 1" class="section practice-areas">
-      
-      <div class="controls" v-if="$route.params.locale === 'fr'">
+    <!-- PRACTICES -->
+    <div v-if="sectionIs === 'practices'" class="section practice-areas">
+
+      <div class="controls">
         <scrollactive
           class="anchors"
           :offset="5"
           :duration="800"
           :clickToScroll="true">
           <ul>
-            <li v-for="(practice, index) in section.practices" :key="index">
-              <a :href="'#' + practice.title_fr_slug"
+            <li v-for="(practice, index) in section" :key="index">
+              <a :href="'#' + practice[keys.title_slug]"
                 class="tile-anchor scrollactive-item">
-                  {{ practice.title_fr }}
+                  {{ practice[keys.title_slug] }}
               </a>
             </li>
           </ul>
         </scrollactive>
       </div>
 
-      <div class="practices-content" v-if="$route.params.locale === 'fr'">
+      <div class="practices-content">
         <div
           class="practice"
-          v-bind:id="practice.title_fr_slug"
-          v-for="(practice, index) in section.practices"
+          v-for="(practice, index) in section"
+          v-bind:id="practice[keys.title_slug]"
           :key="index">
-          <p class="practice-title">{{ practice.title_fr }}</p>
-          <div class="practice-body" v-html="practice.body_fr"></div>
-        </div>
-      </div>
-
-      <div class="controls" v-if="$route.params.locale === 'en'">
-        <scrollactive
-          class="anchors"
-          :offset="5"
-          :duration="800"
-          :clickToScroll="true">
-          <ul>
-            <li v-for="(practice, index) in section.practices" :key="index">
-              <a :href="'#' + practice.title_slug"
-                class="tile-anchor scrollactive-item">
-                  {{ practice.title }}
-              </a>
-            </li>
-          </ul>
-        </scrollactive>
-      </div>
-
-      <div class="practices-content" v-if="$route.params.locale === 'en'">
-        <div
-          class="practice"
-          v-bind:id="practice.title_slug"
-          v-for="(practice, index) in section.practices"
-          :key="index">
-          <p class="practice-title">{{ practice.title }}</p>
-          <div class="practice-body" v-html="practice.body"></div>
+          <p class="practice-title">{{ practice[keys.title] }}</p>
+          <div class="practice-body" v-html="practice[keys.body]"></div>
         </div>
       </div>
 
     </div>
 
     <!-- CONTACT -->
-    <div v-if="siteMap.currentIndex === 2" class="section contact">
+    <div v-if="sectionIs === 'contact'" class="section contact">
       
-      <div v-html="section.body"></div>
+      <div v-html="section[0].body"></div>
 
       <googlemaps-map
         class="vue-map-container"
-        :center="{lat: section.location.lat, lng: section.location.lng}"
+        :center="{lat: section[0].location.lat, lng: section[0].location.lng}"
         :zoom="16"
         :options="{styles}">
 
-        <googlemaps-marker :position="section.location" />
+        <googlemaps-marker :position="section[0].location" />
 
       </googlemaps-map>
     </div>
-    
-  </div>
-  <div v-else>
-    <div>Loading...</div>
+
   </div>
 </template>
-
 
 <script>
 import axios from 'axios'
 import { mapState } from 'vuex'
 import { TimelineMax } from 'gsap'
-import { forIn, mutateKeysForLocale, gmStyles } from '~/utils/utils.js'
+import { mutateKeysForLocale, gmStyles } from '~/utils/utils.js'
 export default {
   computed: mapState([
     'siteMap'
@@ -124,24 +93,34 @@ export default {
     }
   },
   async asyncData ({store, env, params}) {
-    let id = null
+    let query = ''
+    let title = ''
+    let sectionIs = ''
+
     store.state.siteMap.links[params.locale].map((link) => {
-      if (link.section_title_slug === params.section) {
-        id = link.section_link._id
+      if (link.value.title_slug === params.section && link.field.name !== 'page') {
+        query = env.apiUrl + '/collections/get/' + link.field.name + '?token=' + env.apiToken
+        title = link.value.title
+        sectionIs = link.field.name
+      }
+      if (link.value.title_slug === params.section && link.field.name === 'page') {
+        query = env.apiUrl + '/collections/get/pages?token=' + env.apiToken + '&filter[_id]=' + link.value.page._id
+        title = link.value.title
+        sectionIs = link.value.title_slug
       }
     })
 
-    let { data } = await axios.get(`${env.apiUrl}/collections/get/section?token=${env.apiToken}&filter[_id]=${id}&populate=1`)
-    let section = {}
+    let { data } = await axios.get(`${query}`)
+
     let keys = mutateKeysForLocale(data.fields, params.locale)
 
-    forIn(keys, (val, key) => {
-      if (data.entries[0][val]) {
-        section[key] = data.entries[0][val]
-      }
-    })
-
-    return { section: section, isReady: true }
+    return {
+      title: title,
+      sectionIs: sectionIs,
+      section: data.entries,
+      keys: keys,
+      isReady: true
+    }
   },
   transition: {
     name: 'section-transition',
@@ -168,6 +147,7 @@ export default {
 @import '~assets/css/vars.scss';
  .section-wrapper {
    width: 68.75vw;
+
     .bg-wrapper {
       position: fixed;
       top: 0;
@@ -183,6 +163,7 @@ export default {
         background-size: cover;
       }
     }
+
     .title {
       font-family: 'Marklight';
       color: #EE3524;
@@ -196,8 +177,10 @@ export default {
         word-spacing: inherit;
       }
     }
+
     .section {
     }
+
     .partners {
       padding: 110px 0 0 6.25vw;
       ul {
@@ -216,6 +199,7 @@ export default {
         }
       }
     }
+
     .practice-areas {
 
       .controls {

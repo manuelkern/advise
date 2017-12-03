@@ -75,11 +75,11 @@ export const actions = {
     links.en = []
     links.fr = []
     let { data } = await axios.get(process.env.apiUrl + '/regions/data/sitemap?token=' + process.env.apiToken)
-    data.section.map((section) => {
-      links.en.push(section.value)
+    data.links.map((link) => {
+      links.en.push(link)
     })
-    data.section_fr.map((section) => {
-      links.fr.push(section.value)
+    data.links_fr.map((link) => {
+      links.fr.push(link)
     })
     commit('setSiteMapLinks', links)
     commit('setHomePage', data.homepage)

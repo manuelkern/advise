@@ -24,11 +24,11 @@ export default {
     'homePage'
   ]),
   async asyncData ({store, env, params}) {
-    let id = store.state.homePage.section_link._id
+    let id = store.state.homePage.page._id
     let localizedHome = {
       title: ''
     }
-    let { data } = await axios.get(`${env.apiUrl}/collections/get/section?token=${env.apiToken}&filter[_id]=${id}`)
+    let { data } = await axios.get(`${env.apiUrl}/collections/get/pages?token=${env.apiToken}&filter[_id]=${id}`)
     data.entries.map((homepage) => {
       if (params.locale === 'en') {
         localizedHome = {

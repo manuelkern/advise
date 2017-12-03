@@ -25,9 +25,9 @@
                   name: 'locale-section',
                   params: {
                     locale: locales.selected,
-                    section: link.section_title_slug
+                    section: link.value.title_slug
                   }
-                }">{{ link.section_title }}</nuxt-link>
+                }">{{ link.value.title }}</nuxt-link>
             </li>
           </ul>
         </div>
@@ -43,7 +43,7 @@
                   to: 'locale',
                   params: {
                     locale: locale.lang,
-                    section: siteMap.links[locale.lang][siteMap.currentIndex].section_title_slug
+                    section: siteMap.links[locale.lang][siteMap.currentIndex].value.title_slug
                   }
                 }">{{ locale.lang }}</nuxt-link>
             </li>
@@ -79,7 +79,7 @@ export default {
     setCorrectActiveLinksOnPageLoad (locale, section) {
       this.setSelectedLocale(locale)
       this.siteMap.links[locale].map((link, index) => {
-        if (typeof section !== 'undefined' && section === link.section_title_slug) {
+        if (typeof section !== 'undefined' && section === link.value.title_slug) {
           this.setSectionIndex(index)
         }
       })
