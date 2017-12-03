@@ -1,8 +1,8 @@
 <template>
   <div class="section-wrapper" v-if="isReady">
 
-    <div class="bg-wrapper" v-if="section.image">
-      <div class="bg" v-bind:style="{ backgroundImage: 'url(' + baseUrl + section.image.path + ')' }"></div>
+    <div class="bg-wrapper" v-if="sectionImage">
+      <div class="bg" v-bind:style="{ backgroundImage: 'url(' + sectionImage + ')' }"></div>
     </div>
 
     <p class="title">{{ title }}</p>
@@ -41,7 +41,7 @@
             <li v-for="(practice, index) in section" :key="index">
               <a :href="'#' + practice[keys.title_slug]"
                 class="tile-anchor scrollactive-item">
-                  {{ practice[keys.title_slug] }}
+                  {{ practice[keys.title] }}
               </a>
             </li>
           </ul>
@@ -92,7 +92,6 @@ export default {
   data () {
     return {
       isReady: false,
-      baseUrl: process.env.apiBaseUrl,
       styles: gmStyles
     }
   },
@@ -100,16 +99,19 @@ export default {
     let query = ''
     let title = ''
     let sectionIs = ''
+    let sectionImage = ''
 
     store.state.siteMap.links[params.locale].map((link) => {
       if (link.value.title_slug === params.section && link.field.name !== 'page') {
         query = env.apiUrl + '/collections/get/' + link.field.name + '?token=' + env.apiToken
         title = link.value.title
+        sectionImage = env.apiBaseUrl + link.value.image.path
         sectionIs = link.field.name
       }
       if (link.value.title_slug === params.section && link.field.name === 'page') {
         query = env.apiUrl + '/collections/get/pages?token=' + env.apiToken + '&filter[_id]=' + link.value.page._id
         title = link.value.title
+        sectionImage = env.apiBaseUrl + link.value.image.path
         sectionIs = link.value.title_slug
       }
     })
@@ -120,8 +122,9 @@ export default {
 
     return {
       title: title,
-      sectionIs: sectionIs,
       section: data.entries,
+      sectionIs: sectionIs,
+      sectionImage: sectionImage,
       keys: keys,
       isReady: true
     }
