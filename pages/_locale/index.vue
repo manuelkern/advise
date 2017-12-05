@@ -6,10 +6,10 @@
         <div v-html="home.body" class="home-body"></div>
       </div>
       <div class="homepage-bg-wrapper right">
-        <div class="homepage-bg" v-bind:style="{ backgroundImage: 'url(' + baseUrl + home.image.path + ')' }"></div>
+        <div class="homepage-bg" v-bind:style="{ backgroundImage: 'url(' + baseUrl + homePage.image.path + ')' }"></div>
       </div>
       <div class="homepage-bg-wrapper left">
-        <div class="homepage-bg" v-bind:style="{ backgroundImage: 'url(' + baseUrl + home.image.path + ')' }"></div>
+        <div class="homepage-bg" v-bind:style="{ backgroundImage: 'url(' + baseUrl + homePage.image.path + ')' }"></div>
       </div>
     </div>
   </transition>
@@ -33,14 +33,12 @@ export default {
       if (params.locale === 'en') {
         localizedHome = {
           title: homepage.title,
-          body: homepage.body,
-          image: homepage.image
+          body: homepage.body
         }
       } else {
         localizedHome = {
           title: homepage.title_fr,
-          body: homepage.body_fr,
-          image: homepage.image
+          body: homepage.body_fr
         }
       }
     })

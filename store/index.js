@@ -19,14 +19,18 @@ export const state = () => ({
         close: 'MENU',
         open: 'FERMER'
       }
+    },
+    homeLink: {
+      en: 'HOME',
+      fr: 'ACCUEIL'
     }
   },
   locales: {
     selected: 'en',
     default: 'en',
     langs: [
-      {lang: 'en'},
-      {lang: 'fr'}
+      { lang: 'en' },
+      { lang: 'fr' }
     ]
   },
   siteMap: {

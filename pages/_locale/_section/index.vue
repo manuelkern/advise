@@ -1,7 +1,11 @@
 <template>
   <div class="section-wrapper" v-if="isReady">
 
-    <div class="bg-wrapper" v-if="sectionImage">
+    <div class="bg-wrapper right six-c" v-if="sectionImage">
+      <div class="bg" v-bind:style="{ backgroundImage: 'url(' + sectionImage + ')' }"></div>
+    </div>
+
+    <div class="bg-wrapper left one-c" v-if="sectionImage">
       <div class="bg" v-bind:style="{ backgroundImage: 'url(' + sectionImage + ')' }"></div>
     </div>
 
@@ -40,7 +44,7 @@
           <ul>
             <li v-for="(practice, index) in section" :key="index">
               <a :href="'#' + practice[keys.title_slug]"
-                class="tile-anchor scrollactive-item">
+                class="anchor scrollactive-item">
                   {{ practice[keys.title] }}
               </a>
             </li>
@@ -158,16 +162,28 @@ export default {
     .bg-wrapper {
       position: fixed;
       top: 0;
-      right: 0;
       height: 100vh;
       overflow: hidden;
-      width: 37.5vw;
       .bg {
         width: calc(37.5vw + 60px);
         position: absolute;
-        right: 0;
         height: 100%;
         background-size: cover;
+      }
+    }
+
+    .left {
+      left: 0;
+      .bg {
+        left: 0;
+        background-position: 0 100%;
+      }
+    }
+
+    .right {
+      right: 0;
+      .bg {
+        right: 0;
       }
     }
 
@@ -233,7 +249,7 @@ export default {
               @include for-big-desktop-up {
                 padding: 0 0 20px 0;
               }
-              .tile-anchor {
+              .anchor {
                 font-size: 16px;
                 transition: color .3s;
                 @include for-big-desktop-up {

@@ -1,12 +1,14 @@
 <template>
   <transition name="nav-transition">
     <div id="nav-wrapper" v-bind:class="{open: nav.isOpen}">
+      
+      <div class="big-advise four-c">
+        <img src="~/assets/images/advise.svg">
+      </div>
 
-      <span class="overlay">
-        <img class="big-advise" src="~/assets/images/advise.svg">
-      </span>
+      <span class="overlay"></span>
 
-      <nuxt-link to="/" class="logo"><img src="~/assets/images/logo.svg"></nuxt-link>
+      <nuxt-link to="/" class="logo one-c"><img src="~/assets/images/logo.svg"></nuxt-link>
 
       <div class="navigation">
 
@@ -17,6 +19,12 @@
 
         <div class="links">
           <ul>
+            <li>
+              <nuxt-link
+                :to="{ name: 'locale', params: { locale: locales.selected }}"
+                @click.native="toggleNav()"
+                class="link">{{ nav.homeLink[locales.selected] }}</nuxt-link>
+            </li>
             <li v-for="(link, index) in siteMap.links[locales.selected]" :key="link.id"  class="link-wrapper">
               <nuxt-link
                 class="link"
@@ -49,6 +57,7 @@
             </li>
           </ul>
         </div>
+
       </div>
 
     </div>
@@ -109,7 +118,6 @@ export default {
         .to($t.sectionLinks, 0.4, {x: 20}, 'start')
         .staggerFrom($t.list, 0.4, {x: 50, clearProps: 'all'}, 0.2, 'start')
         .to($t.logo, 0.4, {x: 60}, 0.1)
-        .from($t.advise, 0.8, {opacity: 0, x: 100}, 0.3)
     },
     animCloses ($el) {
       let $t = this.set$Targets($el)
@@ -120,7 +128,6 @@ export default {
         .to($t.triggers, 0.6, {y: 0, x: 0}, 'start')
         .to($t.sectionLinks, 0.4, {x: 40}, 'start')
         .staggerTo($t.sectionLink, 0.2, {autoAlpha: 0, clearProps: 'all'}, 0.2, 'start')
-        .to($t.advise, 0.8, {opacity: 0, x: 100, clearProps: 'all'}, 'start')
     },
     toggleNav () {
       this.toggle()
@@ -172,21 +179,34 @@ a {
   }
 }
 
-.logo {
-  position: fixed;
-  right: 20px;
-  top: 20px;
-  height: 360px;
-  width: 35px;
-  z-index: 950;
-  img {
-    position: absolute;
-    height: 100%;
-    right: 0;
-  }
-}
-
 #nav-wrapper {
+
+  .logo {
+    position: fixed;
+    left: 0;
+    bottom: 65px;
+    height: 320px;
+    z-index: 950;
+    img {
+      position: absolute;
+      height: 100%;
+      left: calc(4px + 50%);
+      transform: translateX(-50%);
+    }
+  }
+
+  .big-advise {
+    height: 100vh;
+    z-index: 500;
+    position: fixed;
+    right: 0;
+    overflow: hidden;
+    img {
+      height: 100%;
+      position: absolute;
+      right: -4px;
+    }
+  }
 
   .overlay {
     z-index: 800;
@@ -199,12 +219,6 @@ a {
     opacity: 0.8;
     overflow: hidden;
     transition: width .8s;
-    img {
-      opacity: 0.5;
-      height: 100%;
-      position: absolute;
-      right: 6.25vw;
-    }
   }
 
   .navigation {
