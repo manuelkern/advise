@@ -29,16 +29,16 @@
       <!-- LINKS TO COMPETENCIES -->
 
       <scrollactive
-        class="tiles-anchors"
+        class="competencies-anchors"
         :offset="5"
         :duration="800"
         :clickToScroll="true"
         @itemchanged="updateScroll(...arguments)">
 
         <ul>
-          <li v-for="(competency, index) in currentPartner.competencies" :key="competency.id" class="line">
+          <li v-for="(competency, index) in currentPartner.competencies" :key="competency.id" class="competency-list">
             <a :href="'#' + competency.value.title_slug"
-              class="tile-anchor scrollactive-item">
+              class="competency-anchor scrollactive-item">
                 {{ competency.value.title }}
             </a>
           </li>
@@ -54,11 +54,11 @@
       <div
         v-for="competency in currentPartner.competencies"
         :key="competency.id"
-        class="tile"
+        class="competency"
         v-bind:id="competency.value.title_slug">
 
-        <p class="tile-title">{{ competency.value.title }}</p>
-        <div v-html="competency.value.body" class="tile-body"></div>
+        <p class="competency-title">{{ competency.value.title }}</p>
+        <div v-html="competency.value.body" class="competency-body"></div>
 
       </div>
     </div>
@@ -180,9 +180,9 @@ export default {
       let tlEnter = new TimelineMax({onComplete: done})
       tlEnter.from('.image', 3, {x: 60})
         .from('.partner-image', 0.6, {opacity: 0, width: 0, clearProps: 'all'}, 0)
-        .from('.tile', 1, {x: 100, opacity: 0}, 0)
-        .staggerFrom('.line', 1, {x: -200, opacity: 0}, 0.2, 0)
-        .staggerFrom('.tile-anchor', 1, {opacity: 0, x: 200, clearProps: 'all'}, 0.2, 0.4)
+        .from('.competency', 1, {x: 100, opacity: 0}, 0)
+        .staggerFrom('.competency-list', 1, {x: -200, opacity: 0}, 0.2, 0)
+        .staggerFrom('.competency-anchor', 1, {opacity: 0, x: 200, clearProps: 'all'}, 0.2, 0.4)
         .from('.__current', 1, {opacity: 0, x: -100, clearProps: 'all'}, 0)
     },
     leave (el, done) {
@@ -192,18 +192,18 @@ export default {
           .to('.not-current-overlay', 0.5, {autoAlpha: 0}, 0.2)
           .to('.not-current-overlay', 0.5, {y: '-100%'}, 0.2)
           .to('.arrow', 0.3, {rotation: -90}, 0)
-          .to('.tile', 0.8, {opacity: 0, x: 100}, 0)
+          .to('.competency', 0.8, {opacity: 0, x: 100}, 0)
           .to('.partner-image', 0.3, {opacity: 0, width: 0}, 0)
-          .staggerTo('.line', 1, {x: -200, opacity: 0}, 0.2, 0)
-          .to('.tiles-anchors', 0.8, {opacity: 0, x: -100}, 0)
+          .staggerTo('.competency-list', 1, {x: -200, opacity: 0}, 0.2, 0)
+          .to('.competencies-anchors', 0.8, {opacity: 0, x: -100}, 0)
           .to('.__current', 1, {opacity: 0, x: -100}, 0)
       } else {
         let tlLeave = new TimelineMax({onComplete: done})
         tlLeave.to('.partner-image', 0.3, {opacity: 0, width: 0}, 0)
-          .staggerTo('.tile-anchor', 1, {opacity: 0, x: 30}, 0.2, 0)
-          .to('.tile', 0.8, {opacity: 0, x: 100}, 0)
-          .staggerTo('.line', 1, {x: -200, opacity: 0}, 0.2, 0)
-          .to('.tiles-anchors', 0.8, {opacity: 0, x: -100}, 0)
+          .staggerTo('.competency-anchor', 1, {opacity: 0, x: 30}, 0.2, 0)
+          .to('.competency', 0.8, {opacity: 0, x: 100}, 0)
+          .staggerTo('.competency-list', 1, {x: -200, opacity: 0}, 0.2, 0)
+          .to('.competencies-anchors', 0.8, {opacity: 0, x: -100}, 0)
           .to('.__current', 1, {opacity: 0, x: -100}, 0)
       }
       let tlLeave = new TimelineMax({onComplete: done})
@@ -232,14 +232,16 @@ export default {
     .partner-name {
       font-family: 'Marklight';
       font-size: 24px;
-      margin: 0 0 6px 0;
-      padding-left: 20px;
+      margin: 0;
+      padding: 0 20px;
       &.__current {
         color: #EE3524;
       }
+      @include for-desktop-up {
+        padding: 0 3.125vw;
+      }
       @include for-big-desktop-up {
         margin: 0 0 6px 0;
-        padding-left: 40px;
         font-size: 38px;
       }
     }
@@ -292,22 +294,24 @@ export default {
       }
     }
 
-    .tiles-anchors {
+    .competencies-anchors {
       margin-top: 80px;
       position: relative;
+      padding-left: 20px;
       @include for-desktop-up {
         margin-top: 120px;
+        padding-left: 3.125vw;
       }
       @include for-big-desktop-up {
         margin-top: 160px;
       }
       ul {
         li {
-          padding: 0 0 10px 20px;
+          padding: 0 0 10px 0;
           @include for-big-desktop-up {
-            padding: 0 0 20px 40px;
+            padding: 0 0 20px 0;
           }
-          .tile-anchor {
+          .competency-anchor {
             font-size: 16px;
             transition: color .3s;
             @include for-big-desktop-up {
@@ -328,15 +332,13 @@ export default {
 
   .partner-content {
     margin-left: 31.25vw;
-    padding: 0 40px 0 20px;
-    width: calc(37.5vw - 60px);
+    padding: 0;
+    width: 37.5vw;
     max-width: 720px;
     border-left: 1px solid rgba(149, 152, 154, 0.2);
     overflow-x: hidden;
-    @include for-big-desktop-up {
-      padding: 0 40px 0 40px;
-    }
-    .tile {
+    .competency {
+      padding: 0 40px 0 20px;
       position: relative;
       margin-top: 0;
       &:first-of-type {
@@ -345,7 +347,10 @@ export default {
       &:last-of-type {
         min-height: 100vh;
       }
-      .tile-title {
+      @include for-desktop-up {
+        padding: 0 3.125vw;
+      }
+      .competency-title {
         margin-top: 0;
         font-family: 'Marklight';
         font-size: 38px;
@@ -358,7 +363,7 @@ export default {
           padding-top: 255px;
         }
       }
-      .tile-body {
+      .competency-body {
         font-size: 15px;
         line-height: 1.3;
         @include for-big-desktop-up {

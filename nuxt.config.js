@@ -36,6 +36,15 @@ module.exports = {
   modules: [
     '@nuxtjs/dotenv'
   ],
+  router: {
+    scrollBehavior: function (to, from, savedPosition) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve({ x: 0, y: 0 })
+        }, 500)
+      })
+    }
+  },
   build: {
     vendor: ['axios','gsap'],
     /*

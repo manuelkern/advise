@@ -1,3 +1,5 @@
+import { TimelineMax } from 'gsap'
+
 export const forIn = (obj, fn, thisObj) => {
   for (let key in obj) {
     if (exec(fn, obj, key, thisObj) === false) {
@@ -37,6 +39,47 @@ export const mutateKeysForLocale = (fields, locale) => {
   })
   let newKeys = Object.assign(localizedKeys, notLocalizedKeys)
   return newKeys
+}
+
+export const animations = {
+  navAppears: ($t) => {
+    let tlNavAppears = new TimelineMax()
+    tlNavAppears
+      .from($t.logo, 0.8, {x: 60}, 0)
+  },
+  navOpens: ($t) => {
+    let tlNavOpens = new TimelineMax()
+    tlNavOpens
+      .to($t.triggers, 0.4, {y: 30, x: 18}, 'start')
+      .staggerTo($t.sectionLink, 0.4, {autoAlpha: 1}, 0.2, 'start')
+      .to($t.sectionLinks, 0.4, {x: 20}, 'start')
+      .staggerFrom($t.list, 0.4, {x: 50, clearProps: 'all'}, 0.2, 'start')
+  },
+  navCloses: ($t) => {
+    let tlNavCloses = new TimelineMax()
+    tlNavCloses
+      .to($t.triggers, 0.6, {y: 0, x: 0}, 'start')
+      .to($t.sectionLinks, 0.4, {x: 40}, 'start')
+      .staggerTo($t.sectionLink, 0.2, {autoAlpha: 0, clearProps: 'all'}, 0.1, 'start')
+  },
+  burgerOpens: ($t) => {
+    let tlBurgerOpens = new TimelineMax()
+    tlBurgerOpens
+      .to($t.first, 0.2, {y: 8}, 'start')
+      .to($t.first, 0.2, {rotation: 45}, 'middle')
+      .to($t.last, 0.2, {y: -8}, 'start')
+      .to($t.last, 0.2, {rotation: -45}, 'middle')
+      .to($t.middle, 0.1, {opacity: 0}, 'middle')
+  },
+  burgerCloses: ($t) => {
+    let tlBurgerCloses = new TimelineMax()
+    tlBurgerCloses
+      .to($t.first, 0.2, {rotation: 0}, 'start')
+      .to($t.first, 0.2, {y: 0}, 'middle')
+      .to($t.last, 0.2, {rotation: 0}, 'start')
+      .to($t.last, 0.2, {y: 0}, 'middle')
+      .to($t.middle, 0.1, {opacity: 1}, 'middle')
+  }
 }
 
 export const gmStyles = [

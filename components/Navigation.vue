@@ -1,73 +1,80 @@
 <template>
-  <transition name="nav-transition">
-    <div id="nav-wrapper" v-bind:class="{open: nav.isOpen}">
-      
-      <div class="big-advise four-c">
+  <div id="nav-wrapper" v-bind:class="{open: nav.isOpen}">
+    
+    <transition name="fade">
+      <div class="big-advise" v-if="$route.name !== 'locale-section-partner'">
         <img src="~/assets/images/advise.svg">
       </div>
+    </transition>
 
-      <span class="overlay"></span>
+    <span class="overlay"></span>
 
-      <nuxt-link to="/" class="logo one-c"><img src="~/assets/images/logo.svg"></nuxt-link>
+    <nuxt-link to="/" class="logo one-c"><img src="~/assets/images/logo.svg"></nuxt-link>
 
-      <div class="navigation">
+    
+    <div class="navigation">
+      <div class="inner" v-if="layout.is === 'tablet'">
+        <burger :isNavOpen="nav.isOpen" @clicked="toggleBurger" v-if="layout.is === 'tablet'"></burger>
+      </div>
+      <div class="toggle-nav" v-if="layout.is !== 'tablet'">
+        <a v-on:click="toggleNav" class="trigger __open">{{ nav.trigger[locales.selected].close }}</a>
+        <a v-on:click="toggleNav" class="trigger __close">{{ nav.trigger[locales.selected].open }}</a>
+      </div>
 
-        <div class="toggle-nav">
-          <a v-on:click="toggleNav"class="trigger __open">{{ nav.trigger[locales.selected].close }}</a>
-          <a v-on:click="toggleNav"class="trigger __close">{{ nav.trigger[locales.selected].open }}</a>
-        </div>
+      <div class="links">
+        <ul>
+          <li>
+            <nuxt-link
+              :to="{ name: 'locale', params: { locale: locales.selected }}"
+              @click.native="toggleNav()"
+              class="link">{{ nav.homeLink[locales.selected] }}</nuxt-link>
+          </li>
+          <li v-for="(link, index) in siteMap.links[locales.selected]" :key="link.id"  class="link-wrapper">
+            <nuxt-link
+              class="link"
+              @click.native="setNav(index)"
+              :to="{
+                name: 'locale-section',
+                params: {
+                  locale: locales.selected,
+                  section: link.value.title_slug
+                }
+              }">{{ link.value.title }}</nuxt-link>
+          </li>
+        </ul>
+      </div>
 
-        <div class="links">
-          <ul>
-            <li>
-              <nuxt-link
-                :to="{ name: 'locale', params: { locale: locales.selected }}"
-                @click.native="toggleNav()"
-                class="link">{{ nav.homeLink[locales.selected] }}</nuxt-link>
-            </li>
-            <li v-for="(link, index) in siteMap.links[locales.selected]" :key="link.id"  class="link-wrapper">
-              <nuxt-link
-                class="link"
-                @click.native="setNav(index)"
-                :to="{
-                  name: 'locale-section',
-                  params: {
-                    locale: locales.selected,
-                    section: link.value.title_slug
-                  }
-                }">{{ link.value.title }}</nuxt-link>
-            </li>
-          </ul>
-        </div>
-
-        <div class="locales">
-          <ul>
-            <li v-for="locale in locales.langs" :key="locale.id" class="locale-wrapper">
-              <nuxt-link 
-                class="locale"
-                @click.native="setLocale(locale.lang)"
-                v-bind:class="{ active: locale.lang === $route.params.locale }"
-                :to="{
-                  to: 'locale',
-                  params: {
-                    locale: locale.lang,
-                    section: siteMap.links[locale.lang][siteMap.currentIndex].value.title_slug
-                  }
-                }">{{ locale.lang }}</nuxt-link>
-            </li>
-          </ul>
-        </div>
-
+      <div class="locales">
+        <ul>
+          <li v-for="locale in locales.langs" :key="locale.id" class="locale-wrapper">
+            <nuxt-link 
+              class="locale"
+              @click.native="setLocale(locale.lang)"
+              v-bind:class="{ active: locale.lang === $route.params.locale }"
+              :to="{
+                to: 'locale',
+                params: {
+                  locale: locale.lang,
+                  section: siteMap.links[locale.lang][siteMap.currentIndex].value.title_slug
+                }
+              }">{{ locale.lang }}</nuxt-link>
+          </li>
+        </ul>
       </div>
 
     </div>
-  </transition>
+
+  </div>
 </template>
 
 <script>
+import Burger from '~/components/Burger'
+import { animations } from '~/utils/utils.js'
 import { mapState, mapActions } from 'vuex'
-import { TimelineMax } from 'gsap'
 export default {
+  components: {
+    'burger': Burger
+  },
   computed: mapState([
     'nav',
     'siteMap',
@@ -108,49 +115,42 @@ export default {
       }
       return $targets
     },
-    animOpens ($el) {
-      let tlNavOpens = new TimelineMax()
+    navAppears ($el) {
       let $t = this.set$Targets($el)
-      tlNavOpens
-        .to($t.navigation, 0.6, {width: '31.25vw'}, 'start')
-        .to($t.triggers, 0.4, {y: 30, x: 18}, 'start')
-        .staggerTo($t.sectionLink, 0.4, {autoAlpha: 1}, 0.2, 'start')
-        .to($t.sectionLinks, 0.4, {x: 20}, 'start')
-        .staggerFrom($t.list, 0.4, {x: 50, clearProps: 'all'}, 0.2, 'start')
-        .to($t.logo, 0.4, {x: 60}, 0.1)
+      animations.navAppears($t)
     },
-    animCloses ($el) {
+    navOpens ($el) {
       let $t = this.set$Targets($el)
-      let tlNavCloses = new TimelineMax()
-      tlNavCloses
-        .to($t.navigation, 0.4, {width: '6.25vw'}, 'start')
-        .to($t.logo, 0.4, {x: 0}, 'start')
-        .to($t.triggers, 0.6, {y: 0, x: 0}, 'start')
-        .to($t.sectionLinks, 0.4, {x: 40}, 'start')
-        .staggerTo($t.sectionLink, 0.2, {autoAlpha: 0, clearProps: 'all'}, 0.2, 'start')
+      animations.navOpens($t)
+    },
+    navCloses ($el) {
+      let $t = this.set$Targets($el)
+      animations.navCloses($t)
     },
     toggleNav () {
       this.toggle()
       if (this.nav.isOpen) {
-        this.animOpens(this.$el)
+        this.navOpens(this.$el)
       } else {
-        this.animCloses(this.$el)
+        this.navCloses(this.$el)
       }
     },
     setNav (index) {
       this.setSectionIndex(index)
       this.toggleNav()
+    },
+    toggleBurger (value) {
+      this.toggle()
+      if (value) {
+        this.navOpens(this.$el)
+      } else {
+        this.navCloses(this.$el)
+      }
     }
-  },
-  created () {
   },
   mounted () {
     this.setCorrectActiveLinksOnPageLoad(this.$route.params.locale, this.$route.params.section)
-    let $el = document.getElementById('nav-wrapper')
-    let tlNavAppears = new TimelineMax()
-    let $t = this.set$Targets($el)
-    tlNavAppears.from('.navigation', 1, {width: 0, clearProps: 'width'})
-      .from($t.logo, 0.8, {x: 60}, 0)
+    this.navAppears(this.$el)
   }
 }
 </script>
@@ -174,7 +174,7 @@ a {
   &.active {
     color: #EE3524;
   }
-  &.exact-active-link {
+  &.nuxt-link-exact-active {
     color: #EE3524;
   }
 }
@@ -183,24 +183,50 @@ a {
 
   .logo {
     position: fixed;
-    left: 0;
-    bottom: 65px;
-    height: 320px;
     z-index: 950;
+    height: calc(45vh - 30px);
+    max-height: 280px;
+    right: 0;
+    min-width: 48px;
+    bottom: 30px;
+    transition: opacity .3s;
+    @include for-small-desktop-up {
+      max-height: unset;
+      bottom: 65px;
+      right: initial;
+      left: 0;
+      height: 320px;
+    }
+
     img {
       position: absolute;
       height: 100%;
-      left: calc(4px + 50%);
+      left: calc(2px + 50%);
       transform: translateX(-50%);
+      @include for-small-desktop-up {
+        left: calc(4px + 50%);
+        transform: translateX(-50%);
+      }
     }
   }
 
   .big-advise {
-    height: 100vh;
-    z-index: 500;
     position: fixed;
-    right: 0;
     overflow: hidden;
+    height: 60vh;
+    right: 48px;
+    width: 25vw;
+    top: 0;
+    visibility: hidden;
+    @include for-tablet-landscape-up {
+      z-index: 500;
+      visibility: visible;
+      right: 6.25vw;
+    }
+    @include for-small-desktop-up{
+      height: 100vh;
+      right: 0;
+    }
     img {
       height: 100%;
       position: absolute;
@@ -222,15 +248,38 @@ a {
   }
 
   .navigation {
+    min-width: 48px;
+    width: 6.25vw;
     position: fixed;
     z-index: 900;
-    left: 68.75vw;
-    width: 6.25vw;
     height: 100%;
     background-color: #F7F7F7;
     overflow: hidden;
-    padding-left: 0;
+    right: 0;
     top: 0;
+    transition: width .5s;
+
+    @include for-small-desktop-up {
+      left: 68.75vw;
+      padding-left: 0;
+    }
+    .inner{
+      min-width: 48px;
+      width: 6.25vw;
+      position: fixed;
+      height: 100%;
+      overflow: hidden;
+      right: 0;
+      top: 0;
+      #burger {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 28px;
+        height: 18px;
+        top: 40px;
+      }
+    }
 
     .toggle-nav {
       position: relative;
@@ -258,7 +307,10 @@ a {
     .links {
       position: relative;
       top: 200px;
-      left: calc(3.125vw - 28px);
+      left: 0;
+      @include for-small-desktop-up {
+        left: calc(3.125vw - 28px);
+      }
       @include for-desktop-up {
         left: calc(3.125vw - 33px);
       }
@@ -276,9 +328,18 @@ a {
 
     .locales {
       position: absolute;
-      bottom: 60px;
-      left: calc(3.125vw - 12px);
+      bottom: 30px;
       transition: left .6s;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity .5s;
+      left: 20px;
+      @include for-small-desktop-up {
+        left: calc(3.125vw - 12px);
+        bottom: 60px;
+        opacity: 1;
+        visibility: visible;
+      }
       @include for-big-desktop-up {
         left: calc(3.125vw - 15px);
       }
@@ -299,8 +360,31 @@ a {
     }
   }
   &.open {
+    .big-advise {
+      visibility: visible;
+    }
+    .logo {
+      opacity: 0;
+      @include for-small-desktop-up {
+        opacity: 1;
+      }
+    }
     .overlay {
       width: 68.75vw;
+    }
+    .navigation {
+      width: 100vw;
+      @include for-tablet-landscape-up {
+        width: 50vw;
+      }
+      @include for-small-desktop-up {
+        width: 31.25vw;
+      }
+
+      .locales {
+        opacity: 1;
+        visibility: visible;
+      }
     }
   }
 }
