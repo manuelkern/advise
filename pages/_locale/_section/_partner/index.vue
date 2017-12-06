@@ -123,6 +123,14 @@ export default {
       baseUrl: process.env.apiBaseUrl
     }
   },
+  head () {
+    return {
+      title: 'Advise - ' + this.currentPartner.name,
+      meta: [
+        { hid: 'description', name: 'description', content: this.currentPartner.metadescription }
+      ]
+    }
+  },
   methods: {
     ...mapActions({
       setPanelOpen: 'setPanelOpen',

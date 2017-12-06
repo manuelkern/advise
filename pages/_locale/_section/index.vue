@@ -122,11 +122,20 @@ export default {
       styles: gmStyles
     }
   },
+  head () {
+    return {
+      title: 'Advise - ' + this.title,
+      meta: [
+        { hid: 'description', name: 'description', content: this.metadescription }
+      ]
+    }
+  },
   async asyncData ({store, env, params}) {
     let query = ''
     let title = ''
     let sectionIs = ''
     let sectionImage = ''
+    let metadescription = ''
 
     store.state.siteMap.links[params.locale].map((link) => {
       if (link.value.title_slug === params.section && link.field.name !== 'page') {
@@ -134,12 +143,14 @@ export default {
         title = link.value.title
         sectionImage = env.apiBaseUrl + link.value.image.path
         sectionIs = link.field.name
+        metadescription = link.value.metadescription
       }
       if (link.value.title_slug === params.section && link.field.name === 'page') {
         query = env.apiUrl + '/collections/get/pages?token=' + env.apiToken + '&filter[_id]=' + link.value.page._id
         title = link.value.title
         sectionImage = env.apiBaseUrl + link.value.image.path
         sectionIs = link.value.title_slug
+        metadescription = link.value.metadescription
       }
     })
 
@@ -153,6 +164,7 @@ export default {
       sectionIs: sectionIs,
       sectionImage: sectionImage,
       keys: keys,
+      metadescription: metadescription,
       isReady: true
     }
   },
