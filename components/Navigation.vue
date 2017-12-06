@@ -213,7 +213,7 @@ a {
   .big-advise {
     position: fixed;
     overflow: hidden;
-    height: 60vh;
+    height: 100vh;
     right: 48px;
     width: 25vw;
     top: 0;

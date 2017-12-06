@@ -137,7 +137,9 @@ export default {
       resetPanel: 'resetPanel'
     }),
     updateScroll (e, c, l) {
-      history.pushState(null, null, c.hash)
+      if (typeof c !== 'undefined') {
+        history.pushState(null, null, c.hash)
+      }
     },
     togglePanel () {
       if (!this.layout.panelOpen) {
@@ -225,17 +227,21 @@ export default {
 @import '~assets/css/vars.scss';
 .partners-wrapper {
 
-
   .partner-controls {
     position: fixed;
-    z-index: 200;
     padding: 66px 0 0 0;
-    left: 6.25vw;
+    z-index: 200;
     top: 0;
-    width: 25vw;
     height: 100vh;
     border-left: 1px solid rgba(149, 152, 154, 0.2);
     overflow: hidden;
+    @include for-tablet-landscape-up {
+      left: 6.25vw;
+      width: 31.25vw;
+    }
+    @include for-small-desktop-up {
+      width: 25vw;
+    }
 
     .partner-name {
       font-family: 'Marklight';
@@ -339,22 +345,25 @@ export default {
   }
 
   .partner-content {
-    margin-left: 31.25vw;
+    position: relative;
     padding: 0;
-    width: 37.5vw;
     max-width: 720px;
     border-left: 1px solid rgba(149, 152, 154, 0.2);
     overflow-x: hidden;
+    top: 50vh;
+    @include for-tablet-landscape-up {
+      left: 37.5vw;
+      width: 56.25vw;      
+    }
+    @include for-small-desktop-up {
+      top: 0;
+      left: 31.25vw;
+      width: 37.5vw;
+    }
     .competency {
       padding: 0 40px 0 20px;
       position: relative;
       margin-top: 0;
-      &:first-of-type {
-        margin-top: 5px;
-      }
-      &:last-of-type {
-        min-height: 100vh;
-      }
       @include for-desktop-up {
         padding: 0 3.125vw;
       }
@@ -397,22 +406,44 @@ export default {
       }
       &.active {
       }
+      &:first-of-type {
+        margin-top: 5px;
+        .competency-title {
+          margin-top: -100px;
+          @include for-small-desktop-up {
+            margin-top: 0;
+          }
+        }
+      }
+      &:last-of-type {
+        min-height: 100vh;
+      }
     }
   }
 
   .partner-image {
-    position: fixed;
     overflow: hidden;
-    width: 25vw;
-    height: 100vh;
-    right: 0;
     top: 0;
+    position: absolute;
+    width: 56.25vw;
+    height: 50vh;
+    right: 6.25vw;
+    @include for-small-desktop-up {
+      right: 0;
+      position: fixed;
+      width: 25vw;
+      height: 100vh;
+    }
     .image {
       position: absolute;
       background-size: cover;
+      height: 62.5vw;
+      width: calc(62.5vw + 60px);
+      background-position: 0 50%;
       right: 0;
-      width: calc(25vw + 60px);
-      height: 100%;
+      @include for-small-desktop-up {
+        width: calc(25vw + 60px);
+      }
     }
   }
 }
