@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { TimelineMax } from 'gsap'
 import axios from 'axios'
 export default {
@@ -26,7 +26,8 @@ export default {
   async asyncData ({store, env, params}) {
     let id = store.state.homePage.page._id
     let localizedHome = {
-      title: ''
+      title: '',
+      body: ''
     }
     let { data } = await axios.get(`${env.apiUrl}/collections/get/pages?token=${env.apiToken}&filter[_id]=${id}`)
     data.entries.map((homepage) => {
@@ -42,12 +43,18 @@ export default {
         }
       }
     })
+    store.commit('setCurrentSection', 'homepage')
     return { home: localizedHome }
   },
   data () {
     return {
       baseUrl: process.env.apiBaseUrl
     }
+  },
+  methods: {
+    ...mapActions({
+      setCurrentSection: 'setCurrentSection'
+    })
   },
   transition: {
     name: 'home-transition',

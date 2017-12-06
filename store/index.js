@@ -34,6 +34,7 @@ export const state = () => ({
     ]
   },
   siteMap: {
+    currentSection: '',
     currentIndex: 0,
     links: {
       en: [],
@@ -70,6 +71,9 @@ export const mutations = {
   },
   resetPanel (state) {
     state.layout.panelOpen = false
+  },
+  setCurrentSection (state, section) {
+    state.siteMap.currentSection = section
   }
 }
 
@@ -108,5 +112,8 @@ export const actions = {
   },
   resetPanel ({commit}) {
     commit('resetPanel')
+  },
+  setCurrentSection ({commit}, section) {
+    commit('setCurrentSection', section)
   }
 }

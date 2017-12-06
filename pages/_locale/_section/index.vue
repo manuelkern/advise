@@ -108,7 +108,7 @@
 
 <script>
 import axios from 'axios'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { TimelineMax } from 'gsap'
 import { mutateKeysForLocale, gmStyles } from '~/utils/utils.js'
 export default {
@@ -158,6 +158,8 @@ export default {
 
     let keys = mutateKeysForLocale(data.fields, params.locale)
 
+    store.commit('setCurrentSection', sectionIs)
+
     return {
       title: title,
       section: data.entries,
@@ -168,11 +170,20 @@ export default {
       isReady: true
     }
   },
+  methods: {
+    ...mapActions({
+      setCurrentSection: 'setCurrentSection'
+    }),
+    sectionEnter () {
+      console.log('sectionEnters')
+    }
+  },
   transition: {
     name: 'section-transition',
     appear: true,
     css: false,
     enter (el, done) {
+      console.log(this)
       let tlEnter = new TimelineMax({onComplete: done})
       tlEnter.from('.bg', 3, {x: 60})
         .from('.right', 0.6, {opacity: 0, width: 0, clearProps: 'all'}, 0)
@@ -205,10 +216,10 @@ export default {
       position: relative;
       top: 0;
       height: 55vh;
+      overflow: hidden;
       @include for-tablet-landscape-up {
         position: fixed;
         height: 100vh;
-        overflow: hidden;
       }
       .bg {
         width: calc(100vw + 60px);
@@ -232,21 +243,35 @@ export default {
     .right {
       right: 0;
       width: calc(100vw - 48px);
+      @include for-tablet-landscape-only {
+        right: 6.25vw;
+      }
       @include for-tablet-landscape-up {
         width: 37.5vw;
       }
-      @include for-tablet-landscape-only {
-        right: 6.25vw;
+      .bg {
+        background-position: 50% 50%;
+        right: 0;
+      }
+      &.practices {
+        @include for-tablet-landscape-only {
+          width: 56.25vw;
+          height: 50vh;
+          position: absolute;
+        }
+        .bg {
+          @include for-tablet-landscape-only {
+            background-position: 50% 20%;
+            position: absolute;
+            width: calc(62.5vw + 60px);
+          }
+        }
       }
       &.contact {
         display: none;
         @include for-tablet-landscape-up {
           display: block;
         }
-      }
-      .bg {
-        background-position: 50% 50%;
-        right: 0;
       }
     }
 
@@ -279,9 +304,14 @@ export default {
       @include for-big-desktop-up {
         word-spacing: inherit;
       }
-      &.partners,
-      .associes {
+      &.partners {
         background-color: unset;
+      }
+      &.practices {
+        @include for-tablet-landscape-only {
+          position: fixed;
+          width: calc(37.5vw - 100px);
+        }
       }
     }
 
@@ -346,7 +376,7 @@ export default {
           width: 56.25vw;
         }
         .inner {
-          @include for-tablet-landscape-up {
+          @include for-tablet-landscape-only {
             padding: 40px 100px 50px 50px;
           }
           ul {
@@ -385,11 +415,13 @@ export default {
 
       .controls {
         @include for-tablet-landscape-only {
-          width: 31.25vw;
+          width: 37.5vw;
+          position: fixed;
+          top: 150px;
         }
         .inner {
           @include for-tablet-landscape-only {
-            padding: 0 20px 0 50px;
+            padding: 0 50px 0 50px;
           }
           .anchors {
             position: relative;
@@ -437,15 +469,18 @@ export default {
         padding: 0;
         width: calc(100vw - 48px);
         position: relative;
+        max-width: 720px;
         @include for-tablet-landscape-up {
           width: 56.25vw;
-        }
-        @include for-small-desktop-up {
-          left: 31.25vw;
-          width: calc(37.5vw -1px);
-          max-width: 720px;
           border-left: 1px solid rgba(149, 152, 154, 0.2);
           overflow-x: hidden;
+          left: 37.5vw;
+          top: 50vh;
+        }
+        @include for-small-desktop-up {
+          top: 0;
+          left: 31.25vw;
+          width: calc(37.5vw -1px);
           background-color: white;
         }
 
@@ -519,13 +554,18 @@ export default {
         width: calc(100vw - 48px);
         margin-top: 55vh;
         min-height: 45vh;
-        @include for-small-desktop-up {
+        @include for-tablet-landscape-up {
           min-height: unset;
           margin-top: unset;
-          border-left: 1px solid rgba(149, 152, 154, 0.2);
           width: 56.25vw;
         }
+        @include for-small-desktop-up {
+          border-left: 1px solid rgba(149, 152, 154, 0.2);
+        }
         .inner {
+          @include for-tablet-landscape-only {
+            padding: 0px 50px;
+          }
           .address {
             @include for-small-desktop-up {
               margin-top: 150px;
@@ -539,7 +579,7 @@ export default {
               p {
                 margin: 8px 0;
               }
-              @include for-small-desktop-up {
+              @include for-tablet-landscape-up {
                 margin-top: unset;
                 p {
                   margin: 16px 0;
@@ -561,12 +601,17 @@ export default {
         position: absolute;
         top: 0;
         z-index: 300;
-        @include for-small-desktop-up {
-          top: unset;
-          width: 50vw;
+        @include for-tablet-landscape-up {
           height: 50vh;
-          left: 6.25vw;
+          left: 50px;
+          width: calc(56.25vw - 100px);
+          bottom: 50px;
+          top: unset;
+        }
+        @include for-small-desktop-up {
           bottom: 65px;
+          left: 6.25vw;
+          width: 50vw;
         }
         @include for-desktop-up {
           left: 9.375vw;

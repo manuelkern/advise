@@ -113,6 +113,8 @@ export default {
       }
     })
 
+    store.commit('setCurrentSection', 'partner')
+
     return {
       currentPartner: currentPartner,
       notCurrentPartners: notCurrentPartners
@@ -134,7 +136,8 @@ export default {
   methods: {
     ...mapActions({
       setPanelOpen: 'setPanelOpen',
-      resetPanel: 'resetPanel'
+      resetPanel: 'resetPanel',
+      setCurrentSection: 'setCurrentSection'
     }),
     updateScroll (e, c, l) {
       if (typeof c !== 'undefined') {
@@ -442,6 +445,7 @@ export default {
       background-position: 0 50%;
       right: 0;
       @include for-small-desktop-up {
+        height: 100%;
         width: calc(25vw + 60px);
       }
     }

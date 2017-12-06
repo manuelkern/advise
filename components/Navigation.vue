@@ -2,7 +2,7 @@
   <div id="nav-wrapper" v-bind:class="{open: nav.isOpen}">
     
     <transition name="fade">
-      <div class="big-advise" v-if="$route.name !== 'locale-section-partner'">
+      <div class="big-advise" v-if="$route.name !== 'locale-section-partner'" v-bind:class="siteMap.currentSection">
         <img src="~/assets/images/advise.svg">
       </div>
     </transition>
@@ -232,19 +232,27 @@ a {
       position: absolute;
       right: -4px;
     }
+    &.practices {
+      @include for-tablet-landscape-only {
+        visibility: hidden;
+      }
+    }
   }
 
   .overlay {
     z-index: 800;
     width: 0;
     top: 0;
-    right: 31.25vw;
     height: 100%;
     background-color: #000000;
     position: fixed;
     opacity: 0.8;
-    overflow: hidden;
     transition: width .8s;
+    left: 0;
+    @include for-small-desktop-up {
+      left: unset;
+      right: 31.25vw;
+    }
   }
 
   .navigation {
