@@ -44,6 +44,9 @@ export default {
     },
     keys: {
       type: Object
+    },
+    title: {
+      type: String
     }
   }
 }

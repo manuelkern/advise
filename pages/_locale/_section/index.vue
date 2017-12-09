@@ -16,7 +16,7 @@
 
     <!-- PRACTICES -->
     <practices v-if="sectionIs === 'practices' && layout.is !== 'mobile'" :section="section" :keys="keys"></practices>
-    <practicesmobile v-if="sectionIs === 'practices' && layout.is === 'mobile'" :section="section" :keys="keys"></practicesmobile>
+    <practicesmobile v-if="sectionIs === 'practices' && layout.is === 'mobile'" :section="section" :keys="keys" :title="title"></practicesmobile>
 
     <!-- CONTACT -->
     <contact v-if="sectionIs === 'contact'" :section="section"></contact>
@@ -207,7 +207,7 @@ export default {
     color: #EE3524;
     font-size: 38px;
     margin: 0;
-    width: inherit;
+    width: calc(100% - 68px);
     top: 0;
     left: 0;
     padding: 20px 25px;
