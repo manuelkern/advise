@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-if="layout.isReady">
     <navigation></navigation>
     <nuxt/>
     <div class="border"></div>

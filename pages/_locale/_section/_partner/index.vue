@@ -254,7 +254,7 @@ export default {
       }
       @include for-big-desktop-up {
         margin: 0 0 6px 0;
-        font-size: 38px;
+        font-size: 30px;
       }
     }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="section-wrapper" v-if="isReady && layout.isReady">
+  <div class="section-wrapper" v-if="isReady">
 
     <div class="bg-wrapper right" v-if="sectionImage" v-bind:class="sectionIs">
       <div class="bg" v-bind:style="{ backgroundImage: 'url(' + sectionImage + ')' }"></div>
