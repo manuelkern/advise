@@ -58,7 +58,6 @@ export default {
   },
   transition: {
     name: 'home-transition',
-    appear: true,
     css: false,
     enter (el, done) {
       let tlEnter = new TimelineMax({onComplete: done})

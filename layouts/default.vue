@@ -20,25 +20,36 @@ export default {
   methods: {
     ...mapActions({
       setLayoutWidth: 'setLayoutWidth',
-      setLayoutype: 'setLayoutType'
+      setLayoutype: 'setLayoutType',
+      setLayoutDevice: 'setLayoutDevice',
+      setLayoutIsReady: 'setLayoutIsReady'
     }),
     setWidth () {
       let width = window.innerWidth
-      this.setLayoutWidth(width)
       let type = ''
-      if (width < 1200) {
+      this.setLayoutIsReady(false)
+      this.setLayoutWidth(width)
+      if (width < 900) {
+        type = 'mobile'
+        this.setLayoutDevice(true)
+      } else if (width < 1200) {
         type = 'tablet'
+        this.setLayoutDevice(true)
       } else if (width < 1366) {
         type = 'small-desktop'
+        this.setLayoutDevice(false)
       } else if (width < 1800) {
         type = 'desktop'
+        this.setLayoutDevice(false)
       } else {
         type = 'big-desktop'
+        this.setLayoutDevice(false)
       }
       this.setLayoutype(type)
     },
     setLayout () {
       this.setWidth()
+      this.setLayoutIsReady(true)
     }
   },
   mounted () {

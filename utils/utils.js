@@ -45,7 +45,7 @@ export const animations = {
   navAppears: ($t) => {
     let tlNavAppears = new TimelineMax()
     tlNavAppears
-      .from($t.logo, 0.8, {x: 60}, 0)
+      .from($t.logo, 1, {x: -20, opacity: 0}, 0)
   },
   navOpens: ($t) => {
     let tlNavOpens = new TimelineMax()

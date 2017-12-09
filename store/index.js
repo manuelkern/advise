@@ -2,8 +2,8 @@ import axios from 'axios'
 
 export const state = () => ({
   layout: {
-    tablet: false,
-    ready: false,
+    isReady: false,
+    isMobileDevice: false,
     width: 0,
     is: '',
     panelOpen: false
@@ -48,8 +48,14 @@ export const mutations = {
   setLayoutWidth (state, width) {
     state.layout.width = width
   },
+  setLayoutIsReady (state, value) {
+    state.layout.isReady = value
+  },
   setLayoutType (state, type) {
     state.layout.is = type
+  },
+  setLayoutDevice (state, value) {
+    state.layout.isMobileDevice = value
   },
   setSiteMapLinks (state, links) {
     state.siteMap.links = links
@@ -82,7 +88,7 @@ export const actions = {
     let links = {}
     links.en = []
     links.fr = []
-    let { data } = await axios.get(process.env.apiUrl + '/regions/data/sitemap?token=' + process.env.apiToken)
+    let { data } = await axios.get(process.env.apiUrl + '/regions/data/sitemap?token=' + process.env.apiSmToken)
     data.links.map((link) => {
       links.en.push(link)
     })
@@ -95,8 +101,14 @@ export const actions = {
   setLayoutWidth ({commit}, width) {
     commit('setLayoutWidth', width)
   },
+  setLayoutIsReady ({commit}, value) {
+    commit('setLayoutIsReady', value)
+  },
   setLayoutType ({commit}, type) {
     commit('setLayoutType', type)
+  },
+  setLayoutDevice ({commit}, value) {
+    commit('setLayoutDevice', value)
   },
   setNavTrigger ({commit}) {
     commit('setNavTrigger')

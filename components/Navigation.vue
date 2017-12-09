@@ -9,14 +9,14 @@
 
     <span class="overlay"></span>
 
-    <nuxt-link to="/" class="logo one-c"><img src="~/assets/images/logo.svg"></nuxt-link>
+    <nuxt-link to="/" class="logo one-c"><img class="logo-inner" src="~/assets/images/logo.svg"></nuxt-link>
 
     
     <div class="navigation">
-      <div class="inner" v-if="layout.is === 'tablet'">
-        <burger :isNavOpen="nav.isOpen" @clicked="toggleBurger" v-if="layout.is === 'tablet'"></burger>
+      <div class="inner" v-if="layout.isMobileDevice">
+        <burger :isNavOpen="nav.isOpen" @clicked="toggleBurger" v-if="layout.isMobileDevice"></burger>
       </div>
-      <div class="toggle-nav" v-if="layout.is !== 'tablet'">
+      <div class="toggle-nav" v-if="!layout.isMobileDevice">
         <a v-on:click="toggleNav" class="trigger __open">{{ nav.trigger[locales.selected].close }}</a>
         <a v-on:click="toggleNav" class="trigger __close">{{ nav.trigger[locales.selected].open }}</a>
       </div>
@@ -105,7 +105,7 @@ export default {
     },
     set$Targets ($el) {
       let $targets = {
-        logo: $el.getElementsByClassName('logo'),
+        logo: $el.getElementsByClassName('logo-inner'),
         navigation: $el.getElementsByClassName('navigation'),
         triggers: $el.getElementsByClassName('trigger'),
         list: $el.getElementsByClassName('link-wrapper'),
@@ -150,7 +150,6 @@ export default {
   },
   mounted () {
     this.setCorrectActiveLinksOnPageLoad(this.$route.params.locale, this.$route.params.section)
-    this.navAppears(this.$el)
   }
 }
 </script>

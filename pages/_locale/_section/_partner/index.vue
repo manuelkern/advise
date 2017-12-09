@@ -78,11 +78,7 @@ import { mapState, mapActions } from 'vuex'
 import { TimelineMax } from 'gsap'
 import { forIn, mutateKeysForLocale } from '~/utils/utils.js'
 import axios from 'axios'
-import Tile from '~/components/Tile'
 export default {
-  components: {
-    'tile': Tile
-  },
   computed: mapState([
     'siteMap',
     'layout'
@@ -187,7 +183,6 @@ export default {
   },
   transition: {
     name: 'partner-transition',
-    appear: true,
     css: false,
     enter (el, done) {
       let tlEnter = new TimelineMax({onComplete: done})
