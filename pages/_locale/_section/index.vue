@@ -3,23 +3,23 @@
 
     <div class="bg-wrapper right" v-if="sectionImage" v-bind:class="sectionIs">
       <div class="bg" v-bind:style="{ backgroundImage: 'url(' + sectionImage + ')' }"></div>
+      <div class="overlay"></div>
     </div>
 
     <div v-if="sectionImage && sectionIs !== 'contact' && !layout.isMobileDevice" class="bg-wrapper left one-c">
       <div class="bg" v-bind:style="{ backgroundImage: 'url(' + sectionImage + ')' }"></div>
+      <div class="overlay"></div>
     </div>
 
-    <p class="title" v-bind:class="sectionIs">{{ title }}</p>
-
     <!-- PARTNERS -->
-    <partners v-if="sectionIs === 'partners'" :section="section"></partners>
+    <partners v-if="sectionIs === 'partners'" :section="section" :title="title"></partners>
 
     <!-- PRACTICES -->
-    <practices v-if="sectionIs === 'practices' && layout.is !== 'mobile'" :section="section" :keys="keys"></practices>
-    <practicesmobile v-if="sectionIs === 'practices' && layout.is === 'mobile'" :section="section" :keys="keys" :trigger="layout.panelTrigger[$route.params.locale].open"></practicesmobile>
+    <practices v-if="sectionIs === 'practices' && layout.is !== 'mobile'" :section="section" :title="title" :keys="keys"></practices>
+    <practicesmobile v-if="sectionIs === 'practices' && layout.is === 'mobile'" :section="section" :keys="keys" :title="title" :trigger="layout.panelTrigger[$route.params.locale].open"></practicesmobile>
 
     <!-- CONTACT -->
-    <contact v-if="sectionIs === 'contact'" :section="section"></contact>
+    <contact v-if="sectionIs === 'contact'" :section="section" :title="title"></contact>
 
   </div>
 
@@ -113,18 +113,18 @@ export default {
       let tlEnter = new TimelineMax({onComplete: done})
       tlEnter.from('.bg', 3, {x: 60})
         .from('.right', 0.6, {opacity: 0, width: 0, clearProps: 'all'}, 0)
-        .from('.left', 0.6, {opacity: 0, width: 0, clearProps: 'all'}, 0)
+        .from('.left', 0.6, {opacity: 0, width: 0, clearProps: 'all'}, 0.5)
         .from('.controls, .title', 1, {x: -20, opacity: 0}, 0)
-        .from('.practice', 1, {opacity: 0, clearProps: 'opacity'}, 0)
+        .from('.content', 1, {opacity: 0, clearProps: 'opacity'}, 0)
         .staggerFrom('.partner-link', 0.6, {opacity: 0}, 0.2, 0.2)
     },
     leave (el, done) {
       let tlLeave = new TimelineMax({onComplete: done})
-      tlLeave.to('.right', 0.5, {opacity: 0, width: 0, clearProps: 'width'}, 0)
-        .to('.left', 0.5, {opacity: 0, width: 0, clearProps: 'width'}, 0)
+      tlLeave.to('.right', 0.5, {opacity: 0}, 0)
+        .to('.left', 0.5, {opacity: 0}, 0)
         .staggerTo('.partner-link', 0.5, {opacity: 0}, 0.1, 0)
         .to('.controls, .title', 0.4, {x: 20, opacity: 0}, 0)
-        .to('.practice', 0.5, {opacity: 0}, 0)
+        .to('.content', 0.5, {opacity: 0}, 0)
     }
   }
 }
@@ -147,6 +147,11 @@ export default {
       position: fixed;
       height: 100vh;
     }
+    .overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
     .bg {
       width: calc(100vw + 60px);
       position: absolute;
@@ -160,6 +165,9 @@ export default {
 
   .left {
     left: 0;
+    .overlay {
+      background-color: rgba(44, 43, 42, 0.5);
+    }
     .bg {
       right: 0;
       background-position: 0 100%;
@@ -169,6 +177,9 @@ export default {
   .right {
     right: 0;
     width: calc(100vw - 48px);
+    .overlay {
+      background-color: rgba(44, 43, 42, 0.5);
+    }
     @include for-tablet-landscape-only {
       right: 6.25vw;
     }
@@ -200,51 +211,6 @@ export default {
       }
     }
   }
-
-  .title {
-    position: absolute;
-    font-family: 'Marklight';
-    color: #EE3524;
-    font-size: 38px;
-    margin: 0;
-    width: calc(100vw - 108px);
-    top: 0;
-    left: 0;
-    padding: 23px 20px 0 20px;
-    @include for-tablet-landscape-up {
-      width: calc(56.25vw - 100px);
-      position: relative;
-      padding: 40px 50px 50px 50px;
-    }
-    @include for-small-desktop-up {
-      width: inherit;
-      word-spacing: 56.25vw;
-      position: fixed;
-      padding: 0 20px;
-      left: 6.25vw;
-      top: 60px;
-    }
-    @include for-desktop-up {
-      padding: 0 3.125vw;
-    }
-    @include for-big-desktop-up {
-      word-spacing: inherit;
-    }
-    &.partners {
-      background-color: unset;
-    }
-    &.practices {
-      @include for-phone-only {
-        padding: 23px 20px 0 40px;
-      }
-      @include for-tablet-landscape-only {
-        position: fixed;
-        width: calc(37.5vw - 100px);
-      }
-    }
-
-  }
-
  }
 </style>
 

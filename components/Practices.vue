@@ -1,6 +1,8 @@
 <template>
   <div class="section practice-areas">
 
+    <p class="title">{{ title }}</p>
+
     <div class="controls">
       <div class="inner">
 
@@ -56,21 +58,51 @@ export default {
 @import '~assets/css/vars.scss';
 
 .practice-areas {
+
+  .title {
+    font-family: 'Marklight';
+    color: #EE3524;
+    font-size: 38px;
+    margin: 0;
+    top: 0;
+    left: 0;
+    width: calc(56.25vw - 100px);
+    position: relative;
+    padding: 40px 50px 50px 50px;
+    z-index: 210;
+    @include for-tablet-landscape-only {
+      position: fixed;
+      width: calc(37.5vw - 100px);
+    }
+    @include for-small-desktop-up {
+      width: 18.75vw;
+      word-spacing: 56.25vw;
+      position: fixed;
+      padding: 0 3.125vw;
+      left: 6.25vw;
+      top: 60px;
+    }
+    @include for-big-desktop-up {
+      word-spacing: inherit;
+    }
+  }
+
   .controls {
     width: calc(100vw - 48px);
     position: relative;
     left: 0;
     padding: 20px 0;
     z-index: 200;
-    background-color: #2F2F2F;
     @include for-tablet-landscape-up {
       width: 56.25vw;
-      background-color: unset;
+      background-color: #D7D4D2;
     }
     @include for-tablet-landscape-only {
       width: 37.5vw;
       position: fixed;
       top: 150px;
+      height: calc(100vh - 150px);
+      overflow-y: scroll;
     }
     @include for-small-desktop-up {
       padding: 0;
@@ -91,9 +123,6 @@ export default {
         padding: 0 50px 0 50px;
       }
       @include for-small-desktop-up {
-        padding: 0 20px;
-      }
-      @include for-desktop-up {
         padding: 0 3.125vw;
       }
 
@@ -108,7 +137,7 @@ export default {
 
         ul {
           li {
-            padding: 10px 0 10px 0;
+            padding: 7px 0;
             border-bottom: 1px solid rgba(149, 152, 154, 0.2);
             &:last-of-type {
               border-bottom: unset;
@@ -116,14 +145,17 @@ export default {
             @include for-small-desktop-up {
               border-bottom: unset;
             }
+            @include for-desktop-up {
+              padding: 10px 0;
+            }
             @include for-big-desktop-up {
               padding: 0 0 20px 0;
             }
             .anchor {
-              font-size: 16px;
+              font-size: 14px;
               transition: color .3s;
-              @include for-big-desktop-up {
-                font-size: 20px;
+              @include for-desktop-up {
+                font-size: 16px;
               }
               &.is-active {
                 color: #EE3524;
@@ -144,10 +176,10 @@ export default {
     padding: 0;
     width: calc(100vw - 48px);
     position: relative;
-    max-width: 720px;
+    // max-width: 720px;
+    background-color: #F0EDEB;
     @include for-tablet-landscape-up {
       width: 56.25vw;
-      border-left: 1px solid rgba(149, 152, 154, 0.2);
       overflow-x: hidden;
       left: 37.5vw;
       top: 50vh;
@@ -155,8 +187,10 @@ export default {
     @include for-small-desktop-up {
       top: 0;
       left: 31.25vw;
-      width: calc(37.5vw -1px);
-      background-color: white;
+      width: 37.5vw;
+    }
+    @include for-big-desktop-up {
+      width: 31.25vw;
     }
 
     .practice {
@@ -165,6 +199,9 @@ export default {
       padding: 0 40px 0 20px;
       @include for-tablet-landscape-up {
         padding: 0 20% 0 50px;
+      }
+      @include for-small-desktop-up {
+        padding: 0 3.125vw;
       }
       @include for-desktop-up {
         padding: 0 3.125vw;
@@ -212,7 +249,7 @@ export default {
 
         ul {
           li {
-            padding: 10px 0;
+            padding: 6px 0;
             margin-left: 14px;
             list-style: initial;
             h3 {

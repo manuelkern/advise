@@ -6,10 +6,12 @@
 
       <div class="homepage-bg-wrapper right">
         <div class="homepage-bg" v-bind:style="{ backgroundImage: 'url(' + baseUrl + homePage.image.path + ')' }"></div>
+        <div class="overlay"></div>
       </div>
 
       <div class="homepage-bg-wrapper left" v-if="layout.is !== 'mobile'">
         <div class="homepage-bg" v-bind:style="{ backgroundImage: 'url(' + baseUrl + homePage.image.path + ')' }"></div>
+        <div class="overlay"></div>
       </div>
 
       <div class="home-content">
@@ -70,7 +72,7 @@ export default {
       tlEnter.from('.homepage-bg', 3, {x: 60})
         .from('.right', 0.6, {opacity: 0, width: 0, clearProps: 'all'}, 0)
         .from('.left', 0.6, {opacity: 0, width: 0, clearProps: 'all'}, 0)
-        .from('.home-title', 1, {x: -20, opacity: 0}, 0)
+        .from('.home-title', 1, {x: -20, opacity: 0, clearProps: 'transform'}, 0)
         .from('.home-body', 1, {x: 20, opacity: 0}, 0)
     },
     leave (el, done) {
@@ -106,19 +108,31 @@ export default {
       padding-top: 47px;
       width: inherit;
       font-size: 50px;
+      z-index: 100 !important;
+    }
+    @include for-small-desktop-up {
+      padding: 60px 3.125vw;
+    }
+    @include for-big-desktop-up {
+      padding: 0 3.125vw;
+      top: 25%;
     }
   }
 
   .home-content{
     width: calc(100vw - 48px);
     margin: 0;
+    background-color: #D7D4D2;
     @include for-tablet-landscape-up {
       position: absolute;
       top: 0;
       width: 50vw;
       margin-left: 6.25vw;
-      border-right: 1px solid rgba(149, 152, 154, 0.2);
+      border-right: 1px solid rgba(140, 140, 140, 0.4);
       min-height: 100vh;
+    }
+    @include for-desktop-up {
+      width: 43.75vw;
     }
     .home-body {
       width: calc(100vw - 88px);
@@ -127,6 +141,15 @@ export default {
         margin: 0;
         padding: 120px 6.25vw 0;
         width: unset;
+      }
+      @include for-small-desktop-up {
+        padding: 140px 6.25vw 0;
+      }
+      @include for-big-desktop-up {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        padding-top: 0;
       }
       p {
         &:first-child {
@@ -155,6 +178,11 @@ export default {
       position: fixed;
       height: 100vh;
     }
+    .overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
     .homepage-bg {
       position: absolute;
       height: 100%;
@@ -169,11 +197,21 @@ export default {
     @include for-tablet-landscape-up {
       width: 37.5vw;
     }
+    @include for-desktop-up {
+      width: 43.75vw;
+    }
+    .overlay {
+      background-color: rgba(44, 43, 42, 0.5);
+    }
     .homepage-bg {
       right: 0;
       width: calc(100vw + 60px);
       @include for-tablet-landscape-up {        
         width: calc(37.5vw + 60px);
+      }
+      @include for-desktop-up {
+        width: calc(43.75vw + 60px);
+        background-position: center;
       }
     }
   }
@@ -181,6 +219,9 @@ export default {
   .left {
     left: 0;
     width: 6.25vw;
+    .overlay {
+      background-color: rgba(44, 43, 42, 0.5);
+    }
     .homepage-bg {
       width: calc(6.25vw + 60px);
       right: 0;

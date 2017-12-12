@@ -201,13 +201,13 @@ export default {
           .to('.not-current-overlay', 0.5, {y: '-100%'}, 0.2)
           .to('.arrow', 0.3, {rotation: -90}, 0)
           .to('.competency', 0.8, {opacity: 0, x: 100}, 0)
-          .to('.partner-image', 0.3, {opacity: 0, width: 0}, 0)
+          .to('.partner-image', 0.3, {opacity: 0}, 0)
           .staggerTo('.competency-list', 1, {x: -200, opacity: 0}, 0.2, 0)
           .to('.competencies-anchors', 0.8, {opacity: 0, x: -100}, 0)
           .to('.__current', 1, {opacity: 0, x: -100}, 0)
       } else {
         let tlLeave = new TimelineMax({onComplete: done})
-        tlLeave.to('.partner-image', 0.3, {opacity: 0, width: 0}, 0)
+        tlLeave.to('.partner-image', 0.3, {opacity: 0}, 0)
           .staggerTo('.competency-anchor', 1, {opacity: 0, x: 30}, 0.2, 0)
           .to('.competency', 0.8, {opacity: 0, x: 100}, 0)
           .staggerTo('.competency-list', 1, {x: -200, opacity: 0}, 0.2, 0)
@@ -231,7 +231,7 @@ export default {
     z-index: 200;
     top: 0;
     height: 100vh;
-    border-left: 1px solid rgba(149, 152, 154, 0.2);
+    border-left: 1px solid rgba(140, 140, 140, 0.4);
     overflow: hidden;
     @include for-tablet-landscape-up {
       left: 6.25vw;
@@ -287,7 +287,7 @@ export default {
       position: absolute;
       top: 90px;
       @include for-big-desktop-up {
-        top: 107px;
+        top: 100px;
       }
       .partner-name {
         position: relative;
@@ -345,20 +345,21 @@ export default {
   .partner-content {
     position: relative;
     padding: 0;
-    max-width: 720px;
-    border-left: 1px solid rgba(149, 152, 154, 0.2);
+    border-left: 1px solid rgba(140, 140, 140, 0.4);
+    border-right: 1px solid rgba(140, 140, 140, 0.4);
     overflow-x: hidden;
     top: 50vh;
     @include for-tablet-landscape-up {
       left: 37.5vw;
-      width: 56.25vw;      
+      width: calc(56.25vw - 2px);      
     }
     @include for-small-desktop-up {
       top: 0;
       left: 31.25vw;
-      width: 37.5vw;
+      width: calc(37.5vw - 2px);
     }
     .competency {
+      max-width: 720px;
       padding: 0 40px 0 20px;
       position: relative;
       margin-top: 0;

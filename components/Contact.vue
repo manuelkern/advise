@@ -1,6 +1,8 @@
 <template>
   <div class="section contact">
 
+    <p class="title">{{ title }}</p>
+
     <div class="controls">
       <div class="inner">
 
@@ -28,6 +30,9 @@ export default {
   props: {
     section: {
       type: Array
+    },
+    title: {
+      type: String
     }
   },
   data () {
@@ -41,12 +46,42 @@ export default {
 <style lang="scss">
 @import '~assets/css/vars.scss';
 .contact {
+
+  .title {
+    display: none;
+    @include for-tablet-landscape-up {
+      display: block;
+      margin: 0;
+      top: 0;
+      left: 0;
+      font-family: 'Marklight';
+      color: #EE3524;
+      font-size: 38px;
+      width: calc(56.25vw - 100px);
+      position: relative;
+      padding: 40px 50px 50px 50px;
+    }
+    @include for-small-desktop-up {
+      width: inherit;
+      word-spacing: 56.25vw;
+      position: fixed;
+      padding: 0 20px;
+      left: 6.25vw;
+      top: 60px;
+    }
+    @include for-small-desktop-up {
+      padding: 0 3.125vw;
+    }
+    @include for-big-desktop-up {
+      word-spacing: inherit;
+    }
+  }
+
   .controls {
     position: relative;
     left: 0;
     padding: 20px 0;
     z-index: 200;
-    background-color: #2F2F2F;
     width: calc(100vw - 48px);
     margin-top: 55vh;
     min-height: 45vh;
@@ -75,9 +110,6 @@ export default {
         padding: 0px 50px;
       }
       @include for-small-desktop-up {
-        padding: 0 20px;
-      }
-      @include for-desktop-up {
         padding: 0 3.125vw;
       }
 
@@ -86,21 +118,29 @@ export default {
           margin-top: 150px;
         }
         @include for-desktop-up {
-          margin-top: 212px;
+          margin-top: 160px;
+        }
+        @include for-big-desktop-up {
+          margin-top: 200px;
         }
         div {
-          display: inline-block;
           margin-top: 16px;
           p {
             margin: 8px 0;
+          }
+          a {
+            text-decoration: underline;
+          }
+          @include for-tablet-portrait-up {
+            display: inline-block;
+            &:nth-child(2) {
+              margin-left: 40px;
+            }
           }
           @include for-tablet-landscape-up {
             margin-top: unset;
             p {
               margin: 16px 0;
-            }
-            &:nth-child(2) {
-              margin-left: 40px;
             }
           }
         }

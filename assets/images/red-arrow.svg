@@ -1,14 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="12424.079 5070.292 9.928 17.037">
-  <defs>
-    <style>
-      .cls-1 {
-        fill: #ee3524;
-        stroke: #ee3524;
-        stroke-width: 2px;
-      }
-    </style>
-  </defs>
-  <g id="Group_18" data-name="Group 18" transform="translate(12772.969 5132.633) rotate(180)">
-    <path id="Union_13" data-name="Union 13" class="cls-1" d="M-12084.26-5017.021l7.655,7.655Zm7.655-7.968-8.514,8.51Z" transform="translate(12424.787 5071)"/>
-  </g>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 9.9 17" style="enable-background:new 0 0 9.9 17;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#EE3524;stroke:#EE3524;stroke-width:2;}
+</style>
+<g id="Group_18" transform="translate(12772.969 5132.633) rotate(180)">
+	<path id="Union_13" class="st0" d="M12764.6,5124.3l7.7,7.7L12764.6,5124.3z M12772.3,5116.3l-8.5,8.5L12772.3,5116.3z"/>
+</g>
 </svg>

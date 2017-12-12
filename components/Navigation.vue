@@ -160,15 +160,16 @@ export default {
 @import '~assets/css/vars.scss';
 
 a {
-  color: #ACACAC;
+  color: #8D8B8A;
   text-transform: uppercase;
   letter-spacing: 4px;
   transition: color .3s;
+  font-family: 'MarkLight';
   @include for-desktop-up {
     letter-spacing: 5px;
   }
   &:hover {
-    color: #676767;
+    color: #646464;
   }
   &.active {
     color: #EE3524;
@@ -247,7 +248,7 @@ a {
     position: fixed;
     opacity: 0.8;
     transition: width .8s;
-    left: 0;
+    right: 0;
     @include for-small-desktop-up {
       left: unset;
       right: 31.25vw;
@@ -260,7 +261,7 @@ a {
     position: fixed;
     z-index: 900;
     height: 100%;
-    background-color: #F7F7F7;
+    background-color: #D7D4D2;
     overflow: hidden;
     right: 0;
     top: 0;
@@ -313,7 +314,7 @@ a {
 
     .links {
       position: relative;
-      top: 50%;
+      top: 40%;
       transform: translateY(-50%);
       left: 0;
       width: 100vw;
@@ -327,6 +328,9 @@ a {
       }
       @include for-desktop-up {
         left: calc(3.125vw - 33px);
+      }
+      @include for-big-desktop-up {
+        top: 400px;
       }
       ul {
         li {
@@ -387,7 +391,10 @@ a {
       }
     }
     .overlay {
-      width: 68.75vw;
+      width: 100vw;
+      @include for-small-desktop-up {
+        width: 68.75vw;
+      }
     }
     .navigation {
       width: 100vw;

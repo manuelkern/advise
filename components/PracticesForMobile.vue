@@ -1,20 +1,20 @@
 <template>
   <div class="section practice-areas-mobile">
 
-    <div class="overlay-trigger"></div>
+    <p class="title">{{ title }}</p>
 
     <div class="controls" v-bind:class="{open: isOpen}">
     
       <div class="trigger" v-on:click="toggleSubNav()">
         <img src="~/assets/images/red-arrow.svg" class="arrow">
-        <p v-if="neverOpened">{{ trigger }}</p>
+        <!-- <p v-if="neverOpened">{{ trigger }}</p> -->
       </div>
 
       <div class="inner">
 
         <scrollactive
           class="anchors"
-          :offset="5"
+          :offset="32"
           :duration="800"
           :clickToScroll="true">
           <ul>
@@ -56,6 +56,9 @@ export default {
     },
     trigger: {
       type: String
+    },
+    title: {
+      type: String
     }
   },
   data () {
@@ -78,6 +81,19 @@ export default {
 
 .practice-areas-mobile {
 
+
+  .title {
+    position: absolute;
+    font-family: 'Marklight';
+    color: #F0EDEB;;
+    font-size: 38px;
+    margin: 0;
+    width: calc(100vw - 88px);
+    bottom: 45vh;
+    left: 0;
+    padding: 0 20px 20px 20px;
+  }
+
   .overlay-trigger {
     width: 34px;
     position: absolute;
@@ -92,27 +108,29 @@ export default {
     width: 100vw;
     min-height: 100vh;
     position: fixed;
-    left: calc(-100vw + 34px);
+    left: -100vw;
     top: 0;
     z-index: 200;
-    background-color: transparent;
-    transition: left .5s, background-color .5s;
+    background-color: #D7D4D2;
+    transition: left .5s;
 
     .trigger {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      top: 36px;
-      right: 6px;
+      width: 40px;
+      height: 40px;
+      top: 29px;
+      right: -40px;
       visibility: visible;
-      border-radius: 100%;
       transition: opacity .5s;
       opacity: 1;
+      background-color: #D7D4D2;;
 
       .arrow {
         position: absolute;
-        width: 100%;
-        height: 100%;
+        width: 60%;
+        height: 60%;
+        left: 20%;
+        top: 20%;
       }
       p {
         position: absolute;
@@ -160,10 +178,7 @@ export default {
 
     &.open {
       left: 0;
-      background-color: #2B2B2B;
       .trigger {
-        visibility: hidden;
-        opacity: 0;
       }
     }
   }
@@ -175,11 +190,11 @@ export default {
     width: calc(100vw - 48px);
     position: relative;
     max-width: 720px;
-    background-color: white;
+    background-color: #F0EDEB;
     .practice {
       position: relative;
       margin-top: 0;
-      padding: 0 20px 0 40px;
+      padding: 0 20px 6px 20px;
       max-width: 560px;
       &:last-of-type {
         min-height: 100vh;
@@ -187,7 +202,7 @@ export default {
       .practice-title {
         margin: 0 0 20px 0;
         font-family: 'Marklight';
-        padding-top: 28px;
+        padding-top: 46px;
         color: #EE3524;
         font-size: 24px;
       }

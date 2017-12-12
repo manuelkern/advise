@@ -1,5 +1,8 @@
 <template>
   <div class="section partners">
+
+    <p class="title">{{ title }}</p>
+
     <div class="controls">
       <div class="inner">
 
@@ -29,6 +32,9 @@ export default {
   props: {
     section: {
       type: Array
+    },
+    title: {
+      type: String
     }
   }
 }
@@ -39,6 +45,39 @@ export default {
 
 .partners {
 
+  .title {
+    position: absolute;
+    font-family: 'Marklight';
+    color: #F0EDEB;
+    font-size: 38px;
+    margin: 0;
+    width: calc(100vw - 88px);
+    top: 0;
+    left: 0;
+    z-index: 210;
+    padding: 23px 20px 0 20px;
+    @include for-tablet-landscape-up {
+      color: #EE3524;
+      width: calc(56.25vw - 100px);
+      position: relative;
+      padding: 40px 50px 50px 50px;
+    }
+    @include for-small-desktop-up {
+      width: inherit;
+      word-spacing: 56.25vw;
+      position: fixed;
+      padding: 0 20px;
+      left: 6.25vw;
+      top: 60px;
+    }
+    @include for-small-desktop-up {
+      padding: 0 3.125vw;
+    }
+    @include for-big-desktop-up {
+      word-spacing: inherit;
+    }
+  }
+
   .controls {
     width: calc(100vw - 48px);
     position: relative;
@@ -46,10 +85,9 @@ export default {
     padding: 20px 0;
     z-index: 200;
     min-height: calc(45vh - 40px);
-    background-color: unset;
+    background-color: #D7D4D2;
     @include for-tablet-landscape-up {
       width: 56.25vw;
-      background-color: unset;
     }
     @include for-tablet-landscape-only {
       height: calc(100vh - 173px);
@@ -75,9 +113,6 @@ export default {
         padding: 40px 100px 50px 50px;
       }
       @include for-small-desktop-up {
-        padding: 0 20px;
-      }
-      @include for-desktop-up {
         padding: 0 3.125vw;
       }
 
@@ -99,12 +134,12 @@ export default {
           }
           .partner-link {
             font-family: 'MarkLight';
-            color: #95989A;
+            color: #8D8B8A;
             margin: 0;
             transition: color .3s;
             font-size: 18px;
             &:hover {
-              color: #676767;
+              color: #646464;
             }
             @include for-tablet-landscape-up {
               font-size: 25px;                
