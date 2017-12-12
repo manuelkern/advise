@@ -8,7 +8,7 @@
         <div class="homepage-bg" v-bind:style="{ backgroundImage: 'url(' + baseUrl + homePage.image.path + ')' }"></div>
       </div>
 
-      <div class="homepage-bg-wrapper left" v-if="!layout.isMobileDevice">
+      <div class="homepage-bg-wrapper left" v-if="layout.is !== 'mobile'">
         <div class="homepage-bg" v-bind:style="{ backgroundImage: 'url(' + baseUrl + homePage.image.path + ')' }"></div>
       </div>
 
@@ -103,7 +103,7 @@ export default {
     width: calc(100vw - 48px);
     @include for-tablet-landscape-up {
       left: 6.25vw;
-      padding-top: 55px;
+      padding-top: 47px;
       width: inherit;
       font-size: 50px;
     }
@@ -113,18 +113,31 @@ export default {
     width: calc(100vw - 48px);
     margin: 0;
     @include for-tablet-landscape-up {
+      position: absolute;
+      top: 0;
       width: 50vw;
       margin-left: 6.25vw;
       border-right: 1px solid rgba(149, 152, 154, 0.2);
       min-height: 100vh;
     }
     .home-body {
-      margin: 75px 0 0 12.5vw;
-      padding-right: 6.25vw;
+      width: calc(100vw - 88px);
+      padding: 0 20px 40px 20px;
+      @include for-tablet-landscape-up {
+        margin: 0;
+        padding: 120px 6.25vw 0;
+        width: unset;
+      }
       p {
         &:first-child {
           font-family: 'MarkLight';
-          font-size: 32px;
+          font-size: 22px;
+        }
+        @include for-tablet-landscape-up {
+          &:first-child {
+            font-family: 'MarkLight';
+            font-size: 32px;
+          }
         }
       }
       a {

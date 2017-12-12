@@ -16,7 +16,7 @@
 
     <!-- PRACTICES -->
     <practices v-if="sectionIs === 'practices' && layout.is !== 'mobile'" :section="section" :keys="keys"></practices>
-    <practicesmobile v-if="sectionIs === 'practices' && layout.is === 'mobile'" :section="section" :keys="keys" :title="title"></practicesmobile>
+    <practicesmobile v-if="sectionIs === 'practices' && layout.is === 'mobile'" :section="section" :keys="keys" :trigger="layout.panelTrigger[$route.params.locale].open"></practicesmobile>
 
     <!-- CONTACT -->
     <contact v-if="sectionIs === 'contact'" :section="section"></contact>
@@ -207,10 +207,10 @@ export default {
     color: #EE3524;
     font-size: 38px;
     margin: 0;
-    width: calc(100% - 68px);
+    width: calc(100vw - 108px);
     top: 0;
     left: 0;
-    padding: 20px 25px;
+    padding: 23px 20px 0 20px;
     @include for-tablet-landscape-up {
       width: calc(56.25vw - 100px);
       position: relative;
@@ -234,6 +234,9 @@ export default {
       background-color: unset;
     }
     &.practices {
+      @include for-phone-only {
+        padding: 23px 20px 0 40px;
+      }
       @include for-tablet-landscape-only {
         position: fixed;
         width: calc(37.5vw - 100px);

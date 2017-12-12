@@ -6,7 +6,15 @@ export const state = () => ({
     isMobileDevice: false,
     width: 0,
     is: '',
-    panelOpen: false
+    panelOpen: false,
+    panelTrigger: {
+      en: {
+        open: 'open'
+      },
+      fr: {
+        open: 'ouvrir'
+      }
+    }
   },
   nav: {
     isOpen: false,

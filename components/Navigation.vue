@@ -313,10 +313,17 @@ a {
 
     .links {
       position: relative;
-      top: 200px;
+      top: 50%;
+      transform: translateY(-50%);
       left: 0;
+      width: 100vw;
+      @include for-tablet-landscape-up {
+        top: 200px;
+        width: 50vw;
+      }
       @include for-small-desktop-up {
         left: calc(3.125vw - 28px);
+        width: 31.25vw;
       }
       @include for-desktop-up {
         left: calc(3.125vw - 33px);
@@ -326,8 +333,11 @@ a {
           padding: 6px 0;
           .link {
             visibility: hidden;
-            white-space: nowrap;
-            font-size: 22px;
+            font-size: 20px;
+            @include for-tablet-landscape-up {
+              font-size: 22px;
+              white-space: nowrap;
+            }
           }
         }
       }

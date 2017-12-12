@@ -63,7 +63,6 @@ export default {
       position: fixed;
       left: 6.25vw;
       top: 0;
-      width: 25vw;
       height: 100vh;
       overflow: hidden;
     }

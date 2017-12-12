@@ -110,9 +110,6 @@ export default {
           li {
             padding: 10px 0 10px 0;
             border-bottom: 1px solid rgba(149, 152, 154, 0.2);
-            &:first-of-type {
-              padding: 0 0 10px 0;
-            }
             &:last-of-type {
               border-bottom: unset;
             }
