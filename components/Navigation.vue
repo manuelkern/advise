@@ -249,6 +249,10 @@ a {
     opacity: 0.8;
     transition: width .8s;
     right: 0;
+    display: none;
+    @include for-tablet-landscape-up {
+      display: block;
+    }
     @include for-small-desktop-up {
       left: unset;
       right: 31.25vw;

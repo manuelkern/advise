@@ -89,7 +89,7 @@ export default {
     font-size: 38px;
     margin: 0;
     width: calc(100vw - 88px);
-    bottom: 45vh;
+    bottom: 45%;
     left: 0;
     padding: 0 20px 20px 20px;
   }

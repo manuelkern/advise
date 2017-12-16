@@ -98,12 +98,13 @@ export default {
     top: 0;
     left: 0;
     margin: 0;
+    color: #D7D4D2;
     font-family: 'MarkLight';
-    color: #EE3524;
     z-index: 800 !important;
     font-size: 38px;
     width: calc(100vw - 48px);
     @include for-tablet-landscape-up {
+      color: #EE3524;
       left: 6.25vw;
       padding-top: 47px;
       width: inherit;

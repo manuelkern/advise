@@ -226,14 +226,19 @@ export default {
 .partners-wrapper {
 
   .partner-controls {
-    position: fixed;
-    padding: 66px 0 0 0;
     z-index: 200;
-    top: 0;
-    height: 100vh;
-    border-left: 1px solid rgba(140, 140, 140, 0.4);
-    overflow: hidden;
+    position: relative;
+    top: 50vh;
+    padding: 4vh 0 4vh 0;
+    width: calc(100% - 48px);
     @include for-tablet-landscape-up {
+      overflow: hidden;
+      border-left: 1px solid rgba(140, 140, 140, 0.4);
+      height: 100vh;
+      top: 0;
+      width: unset;
+      padding: 66px 0 0 0;
+      position: fixed;
       left: 6.25vw;
       width: 31.25vw;
     }
@@ -245,9 +250,18 @@ export default {
       font-family: 'Marklight';
       font-size: 24px;
       margin: 0;
-      padding: 0 20px;
+      padding: 0 0 0 50px;
+      position: absolute;
+      width: calc(100% - 48px);
+      top: 4vh;
       &.__current {
         color: #EE3524;
+      }
+      @include for-tablet-landscape-up {
+        padding: 0 20px;
+        width: unset;
+        position: unset;
+        top: unset;
       }
       @include for-desktop-up {
         padding: 0 3.125vw;
@@ -259,33 +273,49 @@ export default {
     }
 
     .show-partners {
-      width: 6.25vw;
-      position: fixed;
       z-index: 650;
-      left: 0;
-      height: 20px;
-      top: 70px;
       text-align: center;
       opacity: 0.5;
       transition: opacity .3s;
+      position: relative;
+      top: 0;
+      left: 10px;
+      width: 28px;
+      height: 28px;
       &:hover {
         opacity: 1;
         cursor: pointer;
       }
-      img {
-        position: absolute;
-        transform: rotate(-90deg);
-        height: 100%;
+      @include for-tablet-landscape-up {
+        left: 0;
+        position: fixed;
+        top: 70px;
+        height: 20px;
+        width: 6.25vw;
       }
       @include for-big-desktop-up {
         height: 30px;
         top: 72px;
       }
+      img {
+        position: absolute;
+        transform: rotate(-90deg);
+        height: 100%;
+        width: 100%;
+        left: 0;
+        @include for-tablet-landscape-up {
+          width: unset;
+          left: unset;
+        }
+      }
     }
 
     .not-current {
       position: absolute;
-      top: 90px;
+      top: 26px;
+      @include for-tablet-landscape-up {
+        top: 90px;
+      }
       @include for-big-desktop-up {
         top: 100px;
       }
@@ -307,9 +337,13 @@ export default {
     }
 
     .competencies-anchors {
-      margin-top: 80px;
       position: relative;
-      padding-left: 20px;
+      margin-top: 20px;
+      padding-left: 50px;
+      @include for-tablet-landscape-up {
+        margin-top: 80px;
+        padding-left: 20px;
+      }
       @include for-desktop-up {
         margin-top: 120px;
         padding-left: 3.125vw;
@@ -345,11 +379,13 @@ export default {
   .partner-content {
     position: relative;
     padding: 0;
-    border-left: 1px solid rgba(140, 140, 140, 0.4);
-    border-right: 1px solid rgba(140, 140, 140, 0.4);
     overflow-x: hidden;
     top: 50vh;
+    width: calc(100% - 48px);
+    background-color: white;
     @include for-tablet-landscape-up {
+      border-left: 1px solid rgba(140, 140, 140, 0.4);
+      border-right: 1px solid rgba(140, 140, 140, 0.4);
       left: 37.5vw;
       width: calc(56.25vw - 2px);      
     }
@@ -360,18 +396,27 @@ export default {
     }
     .competency {
       max-width: 720px;
-      padding: 0 40px 0 20px;
       position: relative;
       margin-top: 0;
+      padding: 0 20px;
+      @include for-tablet-landscape-up {
+        padding: 0 40px 0 20px;
+      }
       @include for-desktop-up {
         padding: 0 3.125vw;
       }
       .competency-title {
         margin-top: 0;
         font-family: 'Marklight';
-        font-size: 38px;
-        color: #808080;
-        padding-top: 160px;
+        font-size: 28px;
+        color: #EE3524;
+        padding-top: 32px;
+        @include for-tablet-landscape-up {
+          color: #808080;
+          padding-top: 40px;
+          font-size: 38px;
+          padding-top: 160px;
+        }
         @include for-desktop-up {
           padding-top: 200px;
         }
@@ -406,9 +451,13 @@ export default {
       &.active {
       }
       &:first-of-type {
-        margin-top: 5px;
+        @include for-tablet-landscape-up {
+          margin-top: 5px;
+        }
         .competency-title {
-          margin-top: -100px;
+          @include for-tablet-landscape-up {
+            margin-top: -100px;
+          }
           @include for-small-desktop-up {
             margin-top: 0;
           }
@@ -422,11 +471,14 @@ export default {
 
   .partner-image {
     overflow: hidden;
+    width: calc(100% - 48px);
     top: 0;
     position: absolute;
-    width: 56.25vw;
     height: 50vh;
-    right: 6.25vw;
+    @include for-tablet-landscape-up {
+      right: 6.25vw;
+      width: 56.25vw;
+    }
     @include for-small-desktop-up {
       right: 0;
       position: fixed;
@@ -436,10 +488,14 @@ export default {
     .image {
       position: absolute;
       background-size: cover;
-      height: 62.5vw;
-      width: calc(62.5vw + 60px);
       background-position: 0 50%;
       right: 0;
+      width: calc(100vw + 60px);
+      height: 50vh;
+      @include for-tablet-landscape-up {
+        height: 62.5vw;
+        width: calc(62.5vw + 60px);
+      }
       @include for-small-desktop-up {
         height: 100%;
         width: calc(25vw + 60px);
