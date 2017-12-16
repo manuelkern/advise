@@ -382,8 +382,9 @@ export default {
     overflow-x: hidden;
     top: 50vh;
     width: calc(100% - 48px);
-    background-color: white;
+    background-color: #EFEDEB;
     @include for-tablet-landscape-up {
+      background-color: unset;
       border-left: 1px solid rgba(140, 140, 140, 0.4);
       border-right: 1px solid rgba(140, 140, 140, 0.4);
       left: 37.5vw;
